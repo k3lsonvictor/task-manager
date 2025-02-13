@@ -1,0 +1,14 @@
+<main>
+  <div class="container-login">
+    <div class="description-login-area">
+      <div>COMECE DE GRAÇA</div>
+      <h1>Crie uma nova conta.</h1>
+      <div>Faça login aqui.</div>
+    </div>
+    <form>
+      <app-input label="email" [control]="email" type="email" placeholder="Digite seu e-mail" />
+      <app-input label="senha" [control]="password" type="password" placeholder="Digite sua senha" />
+      <app-button [clickFunction]="login.bind(this)">Entrar</app-button>
+    </form>
+  </div>
+</main>

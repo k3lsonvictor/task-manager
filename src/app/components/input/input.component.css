@@ -1,0 +1,49 @@
+input {
+  background: transparent;
+  border: none;
+  font-family: 'Courier New', Courier, monospace;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.7);
+  width: 100%;
+}
+
+input:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0px 1000px #333645 inset !important;
+  -webkit-text-fill-color: white !important;
+  transition: background-color 5000s ease-in-out 0s;
+}
+
+input:focus {
+  outline: none;
+  /* Remove a borda de foco */
+  box-shadow: none;
+  /* Remove qualquer sombra */
+}
+
+p {
+  margin: 0px;
+  font-size: 12px;
+  font-weight: 600;
+  color: white;
+}
+
+.input-container {
+  width: 100%;
+  font-family: 'Courier New', Courier, monospace;
+  display: flex;
+  flex-direction: column;
+  background-color: #333645;
+  border-radius: 12px;
+  padding: 10px;
+  gap: 4px;
+  border: 2px solid transparent;
+  /* Borda azul quando focado */
+  /* box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); */
+}
+
+.input-container:focus-within {
+  border: 2px solid #007bff;
+  /* Borda azul quando focado */
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+  /* Efeito de brilho */
+}
