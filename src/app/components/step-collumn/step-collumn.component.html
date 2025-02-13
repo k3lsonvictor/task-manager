@@ -1,8 +1,8 @@
 <div class="container-step">
-  <p>Nome da etapa (6)</p>
+  <p>{{ step.title }} ({{ step.cards.length }})</p>
   <div class="container-cards">
-    <app-card></app-card>
-    <app-card></app-card>
-    <app-card></app-card>
+    @for (card of step.cards; track card) {
+      <app-card class="teste1" [card]="card" cdkDrag></app-card>
+    }
   </div>
 </div>

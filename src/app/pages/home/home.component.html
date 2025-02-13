@@ -4,14 +4,15 @@
     <div class="project-name">Nome do Projeto</div>
     <p>Descrição do projeto. Aqui é onde vai conter informações resumidas sobre o conteúdo do projeto</p>
   </div>
-  <div class="container-steps">
-    <app-step-collumn></app-step-collumn>
-    <app-step-collumn></app-step-collumn>
-    <app-step-collumn></app-step-collumn>
-    <app-step-collumn></app-step-collumn>
-    <app-step-collumn></app-step-collumn>
-    <app-step-collumn></app-step-collumn>
-    <app-step-collumn></app-step-collumn>
-    <app-step-collumn></app-step-collumn>
+  <div class="container-steps" cdkDropListGroup>
+    @for (step of steps; track step; let i = $index) {
+      <app-step-collumn 
+        class="teste"
+        cdkDropList
+        [cdkDropListData]="step.cards"
+        (cdkDropListDropped)="drop($event)"
+        [step]="step">
+      </app-step-collumn>
+    }
   </div>
 </main>
