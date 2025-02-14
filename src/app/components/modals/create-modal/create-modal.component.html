@@ -1,0 +1,18 @@
+<div class="container-create-modal">
+  <div class="modal-title">
+    <label for="">Título</label>
+    <input class="input-title" type="text" [formControl]="title">
+    <!-- <app-input label="título"></app-input> -->
+  </div>
+  <div class="continer-description">
+    <label for="">Descrição</label>
+    <textarea class="area-description" [formControl]="description"></textarea>
+  </div>
+  <!-- <div>Aqui {{step.id}}</div> -->
+  <button (click)="createCard()">
+    Criar
+  </button>
+  <button (click)="closeModal()" class="close-modal">
+    <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="close"></mat-icon>
+  </button>
+</div>

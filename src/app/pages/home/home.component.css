@@ -21,7 +21,9 @@ main {
 .project-header {
   display: flex;
   width: 100%;
-  flex-direction: column;
+  /* flex-direction: column; */
+  justify-content: space-between;
+  align-items: center;
   font-size: 14px;
   gap: 6px;
   color: white;
@@ -54,4 +56,14 @@ main {
 
 .container-steps::-webkit-scrollbar-track {
   background: #626262;
+}
+
+.container-modal {
+  width: 100vw;
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 20;
+  backdrop-filter: blur(5px);
 }

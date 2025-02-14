@@ -1,18 +1,23 @@
 <main>
   <div class="welcome-title">Bem vindo de Volta!</div>
   <div class="project-header">
-    <div class="project-name">Nome do Projeto</div>
-    <p>Descrição do projeto. Aqui é onde vai conter informações resumidas sobre o conteúdo do projeto</p>
+    <div>
+      <div class="project-name">Nome do Projeto</div>
+      <p>Descrição do projeto. Aqui é onde vai conter informações resumidas sobre o conteúdo do projeto</p>
+    </div>
+    <app-button (click)="createStep()">Nova Etapa</app-button>
   </div>
   <div class="container-steps" cdkDropListGroup>
     @for (step of steps; track step; let i = $index) {
-      <app-step-collumn 
-        class="teste"
-        cdkDropList
-        [cdkDropListData]="step.cards"
-        (cdkDropListDropped)="drop($event)"
-        [step]="step">
-      </app-step-collumn>
+    <app-step-collumn class="teste" cdkDropList [cdkDropListData]="step.cards" (cdkDropListDropped)="drop($event)"
+      [step]="step" (createTask)="createTask($event)">
+    </app-step-collumn>
     }
   </div>
 </main>
+
+@if(selectedCard) {
+  <div class="container-modal">
+    <app-modal></app-modal>
+  </div>
+}

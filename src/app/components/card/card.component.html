@@ -1,5 +1,12 @@
-<div class="card">
-  <p class="title">{{card.title}}</p>
-  <p class="tag">tag</p>
-  <p>10-10-10</p>
+<div class="card" (click)="onClick()">
+  <div class="card-header">
+    <p class="title">{{card.title}}</p>
+    <button class="delete-card" (click)="deleteTask($event)">
+      <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="delete"></mat-icon>
+    </button>
+  </div>
+  @if(card.tag && card.tag !== "") {
+  <p class="tag">{{card.tag}}</p>
+  }
+  <p>{{card.limiteDate}}</p>
 </div>

@@ -8,5 +8,4 @@ import { RouterModule } from '@angular/router';
   styleUrl: './home-layout.component.css'
 })
 export class HomeLayoutComponent {
-
 }
