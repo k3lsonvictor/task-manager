@@ -1,6 +1,11 @@
 <div class="container-step">
   <div class="container-header-step">
-    <p>{{ step.title }} ({{ step.cards.length }})</p>
+    <div class="container-step-title">
+      <p class="step-title">{{ step.title }}({{ step.cards.length }})</p>
+      <button class="edit-step-name" (click)="onEditTask()">
+        <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="edit"></mat-icon>
+      </button>
+    </div>
     <div class="container-buttons">
       <button class="add-task" (click)="onCreateTask()">
         <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="add"></mat-icon>
@@ -19,7 +24,7 @@
 
 
 @if(newCardModal) {
-  <div class="new-card-modal">
-    <app-create-modal [step]="step" ></app-create-modal>
-  </div>
+<div class="new-card-modal">
+  <app-create-modal [step]="step"></app-create-modal>
+</div>
 }

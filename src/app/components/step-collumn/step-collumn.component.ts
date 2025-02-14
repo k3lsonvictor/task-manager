@@ -6,6 +6,7 @@ import { ModalService } from '../../services/modals/modal.service';
 import { CreateModalComponent } from '../modals/create-modal/create-modal.component';
 import { CreateNewModalService } from '../../services/modals/create-new-modal.service';
 import { CardService } from '../../services/api/card.service';
+import { TaskService } from '../../services/api/task-service.service';
 
 export interface Step {
   title: string;
@@ -25,7 +26,7 @@ export class StepCollumnComponent {
 
   newCardModal: boolean = false;
 
-  constructor(private createNewModal: CreateNewModalService, private cardService: CardService) {
+  constructor(private createNewModal: CreateNewModalService, private cardService: CardService, private taskService: TaskService) {
     this.createNewModal.newModal$.subscribe(value => {
       this.newCardModal = value;
     });
@@ -36,5 +37,14 @@ export class StepCollumnComponent {
   onCreateTask() {
     this.cardService.setSelectedStep(this.step);
     this.createNewModal.openModal(true)
+  }
+
+  onEditTask() {
+    console.log("editar")
+    this.taskService.editTaskName("novo título", this.step.id).subscribe({
+      next: () => {
+        this.taskService.notifyTaskUpdate();
+      }
+    })
   }
 }

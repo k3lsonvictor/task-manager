@@ -1,4 +1,4 @@
-<div class="container-modal">
+<app-base-modal>
   <div class="modal-title">
     {{selectedCard?.title}}
   </div>
@@ -6,7 +6,4 @@
     <label for="">Descrição</label>
     <div class="area-description">{{selectedCard?.description}}</div>
   </div>
-  <button (click)="closeModal()" class="close-modal">
-    <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="close"></mat-icon>
-  </button>
-</div>
+</app-base-modal>

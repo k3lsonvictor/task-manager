@@ -11,6 +11,27 @@
   gap: 20px;
 }
 
+.container-step-title {
+  display: flex;
+  align-items: center;
+}
+
+.step-title {
+  
+}
+
+.edit-step-name {
+  display: none;
+  background-color: transparent;
+  border: none;
+  color: #7e8394;
+  cursor: pointer;
+}
+
+.container-step-title:hover .edit-step-name {
+  display: block;
+}
+
 .container-cards {
   display: flex;
   flex-direction: column;
@@ -36,7 +57,7 @@
 
 .container-buttons {
   display: flex;
-  gap: 20px;
+  gap: 10px;
 }
 
 mat-icon{

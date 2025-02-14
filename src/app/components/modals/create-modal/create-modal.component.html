@@ -1,4 +1,4 @@
-<div class="container-create-modal">
+<app-base-modal>
   <div class="modal-title">
     <label for="">Título</label>
     <input class="input-title" type="text" [formControl]="title">
@@ -12,7 +12,4 @@
   <button (click)="createCard()">
     Criar
   </button>
-  <button (click)="closeModal()" class="close-modal">
-    <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="close"></mat-icon>
-  </button>
-</div>
+</app-base-modal>

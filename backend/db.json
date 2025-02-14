@@ -2,7 +2,7 @@
   "tasks": [
     {
       "id": "1",
-      "title": "Backlog",
+      "title": "novo título",
       "cards": [
         {
           "title": "Tarefa 1",
@@ -16,7 +16,7 @@
     },
     {
       "id": "2",
-      "title": "Em Andamento",
+      "title": "novo título",
       "cards": [
         {
           "title": "Tarefa 2",
@@ -30,7 +30,7 @@
     },
     {
       "id": "3",
-      "title": "Concluído",
+      "title": "novo título",
       "cards": [
         {
           "title": "Tarefa 3",
@@ -39,6 +39,14 @@
           "stepId": "3",
           "id": "bb325c44-1c4e-4eb0-b54d-c6f245dd36c8",
           "description": ""
+        },
+        {
+          "title": "titulo teste 1",
+          "tag": "",
+          "limiteDate": "14/02/2025",
+          "stepId": "3",
+          "id": "dfa2cd04-3e41-4e01-bebb-114adac22624",
+          "description": "aqui é um teste para a descrição."
         }
       ]
     }
