@@ -19,7 +19,21 @@ export class ProjectsService {
   private projectUpdatedSource = new Subject<void>();
   projectUpdated$ = this.projectUpdatedSource.asObservable();
 
+  private createProjectSubject = new Subject<void>();
+  createProject$ = this.createProjectSubject.asObservable();
+
+  private selectedProjectSource = new BehaviorSubject<string | null>(null);
+  selectedProject$ = this.selectedProjectSource.asObservable();
+
+  triggerCreateProject() {
+    this.createProjectSubject.next();
+  }
+
   constructor(private http: HttpClient) { }
+
+  projetSelected(id: string) {
+    this.selectedProjectSource.next(id);
+  }
 
   notifyProjectUpdate() {
     this.projectUpdatedSource.next();
@@ -38,7 +52,7 @@ export class ProjectsService {
   }
 
   createProject(title: string, description: string): Observable<any> {
-    const newProject = { title, description };
+    const newProject = { title, description, id: crypto.randomUUID() };
     return new Observable(observer => {
       this.http.post(this.apiUrl, newProject).subscribe({
         next: (response) => {
@@ -61,5 +75,17 @@ export class ProjectsService {
         error: (err) => observer.error(err),
       })
     })
+  }
+
+  deleteProject(id: string): Observable<any> {
+    return new Observable(observer => {
+      this.http.delete(`${this.apiUrl}/${id}`).subscribe({
+        next: (response) => {
+          observer.next(response);
+          observer.complete();
+        },
+        error: (err) => observer.error(err),
+      });
+    });
   }
 }

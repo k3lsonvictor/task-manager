@@ -13,12 +13,29 @@
           "description": "Aqui temos um novo card"
         }
       ],
-      "projectId": "2"
+      "projectId": null
     },
     {
       "id": "9c22942e-0dc9-4f28-9614-144f85246344",
       "title": "Fazer",
-      "cards": [],
+      "cards": [
+        {
+          "title": "Estudar conceitos de solid",
+          "tag": "",
+          "limiteDate": "15/02/2025",
+          "stepId": "9c22942e-0dc9-4f28-9614-144f85246344",
+          "id": "cbf68677-09d1-425e-98bd-d1c225d519de",
+          "description": "Estudar conceitos de patners e arquitetura limpa"
+        },
+        {
+          "title": "Entrevista técnica",
+          "tag": "",
+          "limiteDate": "15/02/2025",
+          "stepId": "9c22942e-0dc9-4f28-9614-144f85246344",
+          "id": "738875da-1dc4-429d-b525-821c76f8dcb6",
+          "description": ""
+        }
+      ],
       "projectId": "1"
     },
     {
@@ -34,24 +51,60 @@
           "description": "nova tarefa"
         }
       ],
-      "projectId": "a0a2"
+      "projectId": null
+    },
+    {
+      "id": "5a5798b8-6927-4073-bf80-246399b08009",
+      "title": "Em Andamento",
+      "cards": [
+        {
+          "title": "Estudar Nest",
+          "tag": "",
+          "limiteDate": "15/02/2025",
+          "stepId": "5a5798b8-6927-4073-bf80-246399b08009",
+          "id": "b0761486-17c9-43cf-aa78-20feaf508fba",
+          "description": "Revisar conceitos conhecidos e estudar novos conceitos de nest"
+        },
+        {
+          "title": "Estudar Angular",
+          "tag": "",
+          "limiteDate": "15/02/2025",
+          "stepId": "5a5798b8-6927-4073-bf80-246399b08009",
+          "id": "c3eea10e-b204-44cf-afc2-070055c80566",
+          "description": ""
+        },
+        {
+          "title": "Fazer projeto",
+          "tag": "",
+          "limiteDate": "15/02/2025",
+          "stepId": "5a5798b8-6927-4073-bf80-246399b08009",
+          "id": "11933e67-01fc-406b-9f0b-a39e9541b285",
+          "description": "Fazer projeto para apresentar na entrevista técnica. O projeto escolhido foi um gerenciador de task"
+        }
+      ],
+      "projectId": "1"
+    },
+    {
+      "id": "b93d8494-ca89-45bd-b1d2-c8df027e04c1",
+      "title": "Concluído",
+      "cards": [
+        {
+          "title": "Fazer entrevista com o RH",
+          "tag": "",
+          "limiteDate": "15/02/2025",
+          "stepId": "b93d8494-ca89-45bd-b1d2-c8df027e04c1",
+          "id": "45e4c26f-8127-4f27-8f10-a25a3d32f9e9",
+          "description": "Fazer entrevista inicial com o RH"
+        }
+      ],
+      "projectId": "1"
     }
   ],
   "projects": [
     {
       "id": "1",
-      "title": "Ação do Rosa do Povo",
-      "description": "Nos vamos distribuir comidinhas para os pobres"
-    },
-    {
-      "id": "2",
-      "title": "Projeto 2",
-      "description": "Esta é a descrição do projeto 2"
-    },
-    {
-      "id": "a0a2",
-      "title": "Novo Projeto 3",
-      "description": ""
+      "title": "Plano para processo seletivo tegra",
+      "description": "Estratégia para conseguir ir bem no processo seletivo da tegra!"
     }
   ]
 }

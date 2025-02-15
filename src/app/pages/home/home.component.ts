@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component, Input } from '@angular/core';
 import { Step, StepCollumnComponent } from '../../components/step-collumn/step-collumn.component';
 import { CdkDragDrop, DragDropModule, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { ButtonComponent } from '../../components/button/button.component';
@@ -11,6 +11,8 @@ import { Project, ProjectsService } from '../../services/api/projects.service';
 import { ActivatedRoute } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
 import { CardService } from '../../services/api/card.service';
+import { Subscription } from 'rxjs';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-home',
@@ -20,7 +22,8 @@ import { CardService } from '../../services/api/card.service';
     ButtonComponent,
     CreateModalComponent,
     DetailCardModalComponent,
-    MatIconModule
+    MatIconModule,
+    CommonModule
   ],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css'
@@ -38,7 +41,27 @@ export class HomeComponent {
 
   isCreatingProject: boolean = false;
 
-  constructor(private route: ActivatedRoute, private stepService: StepService, private modalService: ModalService, private projectsService: ProjectsService, private cardService: CardService) {
+  @Input() set creteProject(activate: boolean) {
+    if (activate) {
+      this.onCreateProject();
+    }
+  }
+
+  activeStepId: string | null = null;
+
+  onDragEnter(stepId: string) {
+    console.log("Entrou no step:", stepId);
+    this.activeStepId = stepId;
+    this.cdr.detectChanges();  // Forçar atualização do Angular
+  }
+  
+  onDragLeave() {
+    console.log("Saiu do step");
+    this.activeStepId = null;
+    this.cdr.detectChanges();
+  }
+
+  constructor(private cdr: ChangeDetectorRef, private route: ActivatedRoute, private stepService: StepService, private modalService: ModalService, private projectsService: ProjectsService, private cardService: CardService) {
     this.modalService.modalsState$.subscribe(state => {
       this.detailCardModalIsOpen = state["detailModal"] || false;
       this.createCardModalIsOpen = state["createModal"] || false;
@@ -50,6 +73,9 @@ export class HomeComponent {
         this.project = state;
       }
     })
+    this.projectsService.createProject$.subscribe(() => {
+      this.onCreateProject();
+    });
   }
 
   onEditProject() {
@@ -107,13 +133,13 @@ export class HomeComponent {
     });
   }
 
-  drop(event: CdkDragDrop<Card[]>) {
+  drop(event: CdkDragDrop<Step[]>) {
     const previousStepId = this.extractStepId(event.previousContainer.id);
     const newStepId = this.extractStepId(event.container.id);
-  
+
     console.log('Step anterior:', previousStepId);
     console.log('Step novo:', newStepId);
-  
+
     if (event.previousContainer === event.container) {
       moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
     } else {
@@ -123,18 +149,18 @@ export class HomeComponent {
         event.previousIndex,
         event.currentIndex
       );
-  
+
       // Atualizar o card para o novo step no backend
       const movedCard = event.container.data[event.currentIndex];
       this.updateCardStep(movedCard.id, newStepId);
     }
   }
-  
+
   // Função auxiliar para extrair o ID correto do step
   private extractStepId(dropListId: string): string {
     return dropListId.replace('step-', ''); // Remove "step-" para pegar apenas o número do ID
   }
-  
+
   // Método para atualizar o card no backend
   updateCardStep(cardId: string, stepId: string) {
     this.cardService.updateStepCard(cardId, stepId).subscribe({

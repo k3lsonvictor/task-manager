@@ -18,13 +18,13 @@
       Criar
     </button>
   }
-  @if(modalType === "createProjectModal"){
+  @if(typeModal){
     <button (click)="onCreateProject()">
       Criar
     </button>
   }
   }
-  @if(project){
+  @if(project && modalType === "editProjectModal"){
   <button (click)="editProjectModal()">
     Concluir
   </button>

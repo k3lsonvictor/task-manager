@@ -17,6 +17,7 @@ export class CreateModalComponent {
   @Input() modalType!: string;
   selStep!: Step | null;
   @Input() project!: Project | null;
+  typeModal: boolean = false;
 
   title = new FormControl<string>("")
   description = new FormControl<string>("")
@@ -26,9 +27,15 @@ export class CreateModalComponent {
     private cardService: CardService,
     private stepService: StepService,
     private projectsService: ProjectsService,
-  ) {}
+  ) {
+    this.modalService.modalsState$.subscribe(state => {
+      this.typeModal = state["createProjectModal"] || false;
+    })
+  }
 
   ngOnInit() {
+    console.log(this.typeModal);
+
     this.stepService.selectedStep$.subscribe(selectedStep => {
       this.selStep = selectedStep
     });

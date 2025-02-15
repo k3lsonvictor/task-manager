@@ -14,9 +14,17 @@
   </div>
   <div class="container-steps" cdkDropListGroup>
     @for (step of steps; track step; let i = $index) {
-    <app-step-collumn class="teste" cdkDropList [id]="'step-' + step.id" [cdkDropListData]="step.cards"
-      (cdkDropListDropped)="drop($event)" [step]="step">
-    </app-step-collumn>
+      <app-step-collumn 
+        class="step-column" 
+        [id]="'step-' + step.id" 
+        [ngClass]="{'drag-over': activeStepId === step.id}"
+        (cdkDragEntered)="onDragEnter(step.id)" 
+        (cdkDragExited)="onDragLeave()"
+        cdkDropList 
+        [cdkDropListData]="steps"
+        (cdkDropListDropped)="drop($event)" 
+        [step]="step">
+      </app-step-collumn>
     }
   </div>}
   @else {
@@ -40,5 +48,6 @@
 }
 
 @if(isCreatingProject) {
-<app-create-modal modalType="createProjectModal" [project]="project"></app-create-modal>
+  <div>Aqui</div>
+<app-create-modal modalType="createProjectModal"></app-create-modal>
 }

@@ -5,10 +5,16 @@
       <div class="sidebar">
         <div class="projects">
           @for (project of projects; track project.id) {
-          <a [routerLink]="['/tasks', project.id]">
-            <div class="project-title">{{ project.title }}</div>
-          </a>
+          <div class="container-select-project">
+            <a [routerLink]="['/tasks', project.id]">
+              <div class="project-title">{{ project.title }}</div>
+            </a>
+            <button class="delete-project" (click)="onDeleteProject(project.id)">
+              <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="delete"></mat-icon>
+            </button>
+          </div>
           }
+          <button (click)="onCreateProject()">Novo Projeto</button>
         </div>
         <button (click)="onLogout()">Logout</button>
       </div>

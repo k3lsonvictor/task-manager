@@ -11,21 +11,17 @@ export const routes: Routes = [
   },
   {
     path: "",
+    redirectTo: "tasks",
+    pathMatch: "full"
+  },
+  {
+    path: "",
     component: HomeLayoutComponent,
     children: [
       { path: "tasks", component: HomeComponent, canActivate: [authGuard] },
       { path: "tasks/:projectId", component: HomeComponent, canActivate: [authGuard] }
     ]
   },
-  {
-    path: "**",
-    redirectTo: "login"
-  },
-  // {
-  //   path: "tasks",
-  //   component: HomeComponent,
-  //   canActivate: [authGuard]
-  // },
   {
     path: "**",
     redirectTo: "login"
