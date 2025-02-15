@@ -12,7 +12,7 @@ export interface Project {
   providedIn: 'root'
 })
 export class ProjectsService {
-  private apiUrl = 'http://localhost:3000/projects';
+  private apiUrl = 'https://task-manager-json-service-1.onrender.com/projects';
   private projectSource = new BehaviorSubject<Project | null>(null);
   currentProject$ = this.projectSource.asObservable();
 

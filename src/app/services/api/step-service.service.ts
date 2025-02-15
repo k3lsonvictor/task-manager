@@ -7,7 +7,7 @@ import { Step } from '../../components/step-collumn/step-collumn.component';
   providedIn: 'root'
 })
 export class StepService {
-  private apiUrl = 'http://localhost:3000/tasks';
+  private apiUrl = 'https://task-manager-json-service-1.onrender.com/tasks';
 
   private selectedStepSource = new BehaviorSubject<Step | null>(null);
   selectedStep$ = this.selectedStepSource.asObservable();

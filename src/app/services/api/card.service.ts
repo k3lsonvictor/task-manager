@@ -22,7 +22,7 @@ export class CardService {
     return this.http.get<Step[]>(this.apiUrl);
   }
 
-  private apiUrl = 'http://localhost:3000/tasks';
+  private apiUrl = 'https://task-manager-json-service-1.onrender.com/tasks';
   constructor(private http: HttpClient) { }
 
   formatDateToBrazilian(date: Date): string {
