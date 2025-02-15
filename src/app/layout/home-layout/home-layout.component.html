@@ -2,6 +2,13 @@
   <div class="content">
     <aside class="sidebar">
       <h3>Projetos</h3>
+      <div class="projects">
+        @for (project of projects; track project.id) {
+        <a [routerLink]="['/tasks', project.id]">
+          <div class="project-title">{{ project.title }}</div>
+        </a>
+        }
+      </div>
     </aside>
     <div class="main-content">
       <router-outlet></router-outlet>

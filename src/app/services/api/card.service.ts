@@ -77,7 +77,7 @@ export class CardService {
           if (step) {
             // Remover o card do array de cards do step
             const updatedCards = step.cards.filter((c: Card) => c.id !== card.id);
-
+            console.log(updatedCards)
             // Atualizar o JSON Server com o novo array de cards
             this.http.patch(`${this.apiUrl}/${step.id}`, { cards: updatedCards }).subscribe({
               next: (response) => {

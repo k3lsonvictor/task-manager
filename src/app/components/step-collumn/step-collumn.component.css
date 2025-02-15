@@ -16,12 +16,24 @@
   align-items: center;
 }
 
-.step-title {
-  
+.container-edit-step-title {
+  display: flex;
+  align-items: center;
 }
 
 .edit-step-name {
   display: none;
+  background-color: transparent;
+  border: none;
+  color: #7e8394;
+  cursor: pointer;
+}
+
+.edit-step-title {
+  width: 100px;
+}
+
+.confirm-step-name {
   background-color: transparent;
   border: none;
   color: #7e8394;

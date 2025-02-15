@@ -13,8 +13,13 @@ export const routes: Routes = [
     path: "",
     component: HomeLayoutComponent,
     children: [
-      {path: "tasks", component: HomeComponent, canActivate: [authGuard]}
+      { path: "tasks", component: HomeComponent, canActivate: [authGuard] },
+      { path: "tasks/:projectId", component: HomeComponent, canActivate: [authGuard] }
     ]
+  },
+  {
+    path: "**",
+    redirectTo: "login"
   },
   // {
   //   path: "tasks",

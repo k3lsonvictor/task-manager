@@ -2,7 +2,8 @@
   "tasks": [
     {
       "id": "1",
-      "title": "novo título",
+      "title": "teste",
+      "projectId": "1",
       "cards": [
         {
           "title": "Tarefa 1",
@@ -16,7 +17,8 @@
     },
     {
       "id": "2",
-      "title": "novo título",
+      "title": "titulo",
+      "projectId": "1",
       "cards": [
         {
           "title": "Tarefa 2",
@@ -30,7 +32,8 @@
     },
     {
       "id": "3",
-      "title": "novo título",
+      "title": "titulo",
+      "projectId": "1",
       "cards": [
         {
           "title": "Tarefa 3",
@@ -49,6 +52,33 @@
           "description": "aqui é um teste para a descrição."
         }
       ]
+    },
+    {
+      "id": "0e32da28-4592-4a50-aec6-61efa577d163",
+      "title": "Etapa 1",
+      "cards": [
+        {
+          "title": "Novo card",
+          "tag": "",
+          "limiteDate": "15/02/2025",
+          "stepId": "0e32da28-4592-4a50-aec6-61efa577d163",
+          "id": "8bfb26b9-fb59-4669-a297-2c8da66615f9",
+          "description": "Aqui temos um novo card"
+        }
+      ],
+      "projectId": "2"
+    }
+  ],
+  "projects": [
+    {
+      "id": "1",
+      "title": "Projeto 1",
+      "description": ""
+    },
+    {
+      "id": "2",
+      "title": "Projeto 2",
+      "description": ""
     }
   ]
 }

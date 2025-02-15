@@ -1,9 +1,8 @@
 import { Component, Input } from '@angular/core';
-import { CreateNewModalService } from '../../../services/modals/create-new-modal.service';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { CardService } from '../../../services/api/card.service';
 import { Step } from '../../step-collumn/step-collumn.component';
-import { TaskService } from '../../../services/api/task-service.service';
+import { StepService } from '../../../services/api/step-service.service';
 import { BaseModalComponent } from '../base-modal/base-modal.component';
 import { ModalService } from '../../../services/modals/modal.service';
 
@@ -16,25 +15,17 @@ import { ModalService } from '../../../services/modals/modal.service';
 export class CreateModalComponent {
   selStep!: Step | null;
 
-  @Input() step!: Step;
-
   title = new FormControl<string>("")
   description = new FormControl<string>("")
 
   constructor(
-    private createNewModalService: CreateNewModalService,
     private modalService: ModalService,
     private cardService: CardService,
-    private taskService: TaskService
-  ) {
-    // this.createNewModalService.newModal$.subscribe(value => {
-    //   this.newCardModal = value;
-    //   this.isOpen = !!value;
-    // })
-  }
+    private stepService: StepService
+  ) {}
 
   ngOnInit() {
-    this.cardService.selectedStep$.subscribe(selectedStep => {
+    this.stepService.selectedStep$.subscribe(selectedStep => {
       this.selStep = selectedStep
     });
   }
@@ -47,8 +38,10 @@ export class CreateModalComponent {
 
     this.cardService.addCard(newCard).subscribe({
       next: () => {
-        this.taskService.notifyTaskUpdate();
-        this.taskService.getTasks(); // Atualiza as tarefas após a criação do card
+        this.stepService.notifyStepUpdate();
+        if (this.selStep?.projectId) {
+          this.stepService.getSteps(this.selStep.projectId);
+        }
         this.modalService.closeModal("createModal");
       },
       error: (err) => console.error('Erro ao criar card:', err)

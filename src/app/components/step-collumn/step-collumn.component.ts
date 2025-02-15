@@ -2,43 +2,69 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Card, CardComponent } from '../card/card.component';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { MatIconModule } from '@angular/material/icon';
-import { CreateModalComponent } from '../modals/create-modal/create-card-modal.component';
-import { CreateNewModalService } from '../../services/modals/create-new-modal.service';
-import { CardService } from '../../services/api/card.service';
-import { TaskService } from '../../services/api/task-service.service';
-import { BaseModalComponent } from '../modals/base-modal/base-modal.component';
+import { StepService } from '../../services/api/step-service.service';
 import { ModalService } from '../../services/modals/modal.service';
+import { FormsModule } from '@angular/forms';
 
 export interface Step {
   title: string;
   id: string;
   cards: Card[];
+  projectId: string;
 }
 
 @Component({
   selector: 'app-step-collumn',
-  imports: [CardComponent, DragDropModule, MatIconModule],
+  imports: [CardComponent, DragDropModule, MatIconModule, FormsModule],
   templateUrl: './step-collumn.component.html',
   styleUrl: './step-collumn.component.css',
 })
 export class StepCollumnComponent {
   @Input() cards: any[] = [];
   @Input() step!: Step;
-  @Output() createTask = new EventEmitter<string>();
-  newCardModal: boolean = false;
 
-  constructor(private modalService: ModalService, private cardService: CardService, private taskService: TaskService) {}
+  setTitleStep: string = "";
 
-  onCreateTask() {
-    this.taskService.setSelectedStep(this.step);
+  isEditing: boolean = false;
+
+
+  constructor(private modalService: ModalService, private stepService: StepService) { }
+
+  ngOnInit() {
+    this.setTitleStep = this.step.title;
+  }
+
+  onCreateStep() {
+    this.stepService.setSelectedStep(this.step);
     this.modalService.openModal("createModal")
   }
 
-  onEditTask() {
-    this.taskService.editTaskName("novo título", this.step.id).subscribe({
+  onDeleteStep() {
+    this.stepService.deleteStep(this.step.id).subscribe({
       next: () => {
-        this.taskService.notifyTaskUpdate();
+        this.stepService.notifyStepUpdate();
+        this.stepService.getSteps(this.step.projectId);
       }
     })
+  }
+
+  onEditStep() {
+    this.isEditing = true;
+  }
+
+  onConfirmEditStep() {
+    if (this.setTitleStep.trim()) {
+      this.stepService.editStepName(this.setTitleStep, this.step.id).subscribe({
+        next: () => {
+          this.step.title = this.setTitleStep; // Atualiza a exibição
+          this.isEditing = false;
+          this.stepService.notifyStepUpdate();
+        }
+      });
+    }
+  }
+
+  onCancelEditStep() {
+    this.isEditing = false;
   }
 }

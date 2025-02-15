@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { ModalService } from '../../services/modals/modal.service';
 import { MatIconModule } from '@angular/material/icon';
 import { CardService } from '../../services/api/card.service';
-import { TaskService } from '../../services/api/task-service.service';
+import { StepService } from '../../services/api/step-service.service';
 
 export interface Card {
   title: string;
@@ -27,14 +27,14 @@ export class CardComponent {
 
   detailCardModalIsOpen: boolean = false;
 
-  constructor(private modalService: ModalService, private cardService: CardService, private taskService: TaskService) {
+  constructor(private modalService: ModalService, private cardService: CardService, private stepService: StepService) {
   }
 
-  deleteTask(event: Event) {
+  deleteStep(event: Event) {
     event.stopPropagation();
     this.cardService.removeCard(this.card).subscribe({
       next: () => {
-        this.taskService.notifyTaskUpdate();
+        this.stepService.notifyStepUpdate();
       }
     });
   }

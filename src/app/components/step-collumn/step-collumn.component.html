@@ -1,17 +1,30 @@
 <div class="container-step">
   <div class="container-header-step">
+    @if(!isEditing) {
     <div class="container-step-title">
       <p class="step-title">{{ step.title }}({{ step.cards.length }})</p>
-      <button class="edit-step-name" (click)="onEditTask()">
+      <button class="edit-step-name" (click)="onEditStep()">
         <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="edit"></mat-icon>
       </button>
     </div>
+    }
+    @if(isEditing) {
+      <div class="container-edit-step-title">
+        <input class="edit-step-title" [(ngModel)]="setTitleStep"/>
+        <button class="confirm-step-name" (click)="onConfirmEditStep()">
+          <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="check"></mat-icon>
+        </button>
+        <button class="confirm-step-name" (click)="onCancelEditStep()">
+          <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="close"></mat-icon>
+        </button>
+      </div>
+    }
     <div class="container-buttons">
-      <button class="add-task" (click)="onCreateTask()">
+      <button class="add-task" (click)="onCreateStep()">
         <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="add"></mat-icon>
       </button>
-      <button class="add-task" (click)="onCreateTask()">
-        <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="more_vert"></mat-icon>
+      <button class="add-task" (click)="onDeleteStep()">
+        <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="delete"></mat-icon>
       </button>
     </div>
   </div>
@@ -24,7 +37,7 @@
 
 
 <!-- <div class="new-card-modal"> -->
-  <!-- <app-base-modal>
+<!-- <app-base-modal>
     <app-create-modal [step]="step"></app-create-modal>
   </app-base-modal> -->
 <!-- </div> -->
