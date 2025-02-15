@@ -1,6 +1,6 @@
 <main>
   <div class="welcome-title">Bem vindo de Volta!</div>
-  <div class="project-header">
+  @if(project){<div class="project-header">
     <div>
       <div class="container-project-title">
         <div class="project-name">{{project.title}}</div>
@@ -14,20 +14,31 @@
   </div>
   <div class="container-steps" cdkDropListGroup>
     @for (step of steps; track step; let i = $index) {
-    <app-step-collumn class="teste" cdkDropList [cdkDropListData]="step.cards" (cdkDropListDropped)="drop($event)"
-      [step]="step">
+    <app-step-collumn class="teste" cdkDropList [id]="'step-' + step.id" [cdkDropListData]="step.cards"
+      (cdkDropListDropped)="drop($event)" [step]="step">
     </app-step-collumn>
     }
+  </div>}
+  @else {
+  <div>
+    <div class="none-project">Escolha um projeto ao lado ou crie um novo projeto</div>
+    <button (click)="onCreateProject()">Novo Projeto</button>
   </div>
+  }
 </main>
 
 @if(detailCardModalIsOpen) {
 <app-detail-card-modal></app-detail-card-modal>
 }
+
 @if(createCardModalIsOpen) {
 <app-create-modal modalType="createModal"></app-create-modal>
 }
 
 @if(isEditingProject) {
-  <app-create-modal modalType="editProjectModal" [project]="project"></app-create-modal>
+<app-create-modal modalType="editProjectModal" [project]="project"></app-create-modal>
+}
+
+@if(isCreatingProject) {
+<app-create-modal modalType="createProjectModal" [project]="project"></app-create-modal>
 }

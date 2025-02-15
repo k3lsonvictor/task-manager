@@ -1,59 +1,6 @@
 {
   "tasks": [
     {
-      "id": "1",
-      "title": "teste",
-      "projectId": "1",
-      "cards": [
-        {
-          "title": "Tarefa 1",
-          "tag": "",
-          "limiteDate": "13/02/2025",
-          "stepId": "1",
-          "id": "ce78f31b-4f8f-478a-815c-b35b96837735",
-          "description": ""
-        }
-      ]
-    },
-    {
-      "id": "2",
-      "title": "titulo",
-      "projectId": "1",
-      "cards": [
-        {
-          "title": "Tarefa 2",
-          "tag": "",
-          "limiteDate": "13/02/2025",
-          "stepId": "2",
-          "id": "7e3d45bf-b35d-4c16-bc04-996acf3ed4e0",
-          "description": ""
-        }
-      ]
-    },
-    {
-      "id": "3",
-      "title": "titulo",
-      "projectId": "1",
-      "cards": [
-        {
-          "title": "Tarefa 3",
-          "tag": "",
-          "limiteDate": "13/02/2025",
-          "stepId": "3",
-          "id": "bb325c44-1c4e-4eb0-b54d-c6f245dd36c8",
-          "description": ""
-        },
-        {
-          "title": "titulo teste 1",
-          "tag": "",
-          "limiteDate": "14/02/2025",
-          "stepId": "3",
-          "id": "dfa2cd04-3e41-4e01-bebb-114adac22624",
-          "description": "aqui é um teste para a descrição."
-        }
-      ]
-    },
-    {
       "id": "0e32da28-4592-4a50-aec6-61efa577d163",
       "title": "Etapa 1",
       "cards": [
@@ -67,18 +14,44 @@
         }
       ],
       "projectId": "2"
+    },
+    {
+      "id": "9c22942e-0dc9-4f28-9614-144f85246344",
+      "title": "Fazer",
+      "cards": [],
+      "projectId": "1"
+    },
+    {
+      "id": "09d76868-6f57-4389-8797-88456b51bd0c",
+      "title": "New Step",
+      "cards": [
+        {
+          "title": "Nova tarefa",
+          "tag": "",
+          "limiteDate": "15/02/2025",
+          "stepId": "09d76868-6f57-4389-8797-88456b51bd0c",
+          "id": "a6b557dd-b422-421c-9f11-a9384653d1a8",
+          "description": "nova tarefa"
+        }
+      ],
+      "projectId": "a0a2"
     }
   ],
   "projects": [
     {
       "id": "1",
-      "title": "Projeto 7",
-      "description": "Esta é a descrição do projeto 7"
+      "title": "Ação do Rosa do Povo",
+      "description": "Nos vamos distribuir comidinhas para os pobres"
     },
     {
       "id": "2",
-      "title": "Projeto 9",
-      "description": "Esta é a descrição do projeto 9"
+      "title": "Projeto 2",
+      "description": "Esta é a descrição do projeto 2"
+    },
+    {
+      "id": "a0a2",
+      "title": "Novo Projeto 3",
+      "description": ""
     }
   ]
 }

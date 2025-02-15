@@ -37,6 +37,19 @@ export class ProjectsService {
     return this.http.get<any>(`${this.apiUrl}`);
   }
 
+  createProject(title: string, description: string): Observable<any> {
+    const newProject = { title, description };
+    return new Observable(observer => {
+      this.http.post(this.apiUrl, newProject).subscribe({
+        next: (response) => {
+          observer.next(response);
+          observer.complete();
+        },
+        error: (err) => observer.error(err),
+      });
+    });
+  }
+
   editProject(title: string, description: string, id: string): Observable<any> {
     console.log("entrou")
     return new Observable(observer => {

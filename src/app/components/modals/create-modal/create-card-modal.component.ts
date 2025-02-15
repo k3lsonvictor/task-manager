@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { CardService } from '../../../services/api/card.service';
 import { Step } from '../../step-collumn/step-collumn.component';
@@ -54,9 +54,22 @@ export class CreateModalComponent {
     })
   }
 
+  onCreateProject() {
+    if (this.modalType !== "createProjectModal") {
+      return;
+    }
+    this.projectsService.createProject(this.title.value!, this.description.value!).subscribe({
+      next: () => {
+        this.projectsService.notifyProjectUpdate();
+        this.closeModal();
+      },
+      error: (err) => console.error('Erro ao criar projeto:', err)
+    });
+  }
+
   createCard() {
-    if (this.selStep === null) {
-      return
+    if (this.modalType !== "createModal" || this.selStep === null) {
+      return;
     }
     const newCard = this.cardService.createCard(this.title.value!, "", this.selStep.id, this.description.value!);
 

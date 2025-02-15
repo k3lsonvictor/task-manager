@@ -42,6 +42,12 @@ aside {
   align-items: start;
   color: white;
 }
+.sidebar {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
 
 h3 {
   width: 100%;

@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Card } from '../../components/card/card.component';
 import { HttpClient } from '@angular/common/http';
 import { Step } from '../../components/step-collumn/step-collumn.component';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, map, Observable, switchMap } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -16,6 +16,10 @@ export class CardService {
 
   selectCard(card: Card) {
     this.selectedCardSource.next(card);
+  }
+
+  private fetchSteps(): Observable<Step[]> {
+    return this.http.get<Step[]>(this.apiUrl);
   }
 
   private apiUrl = 'http://localhost:3000/tasks';
@@ -41,57 +45,45 @@ export class CardService {
   }
 
   addCard(card: Card): Observable<any> {
-    return new Observable(observer => {
-      this.http.get<any[]>(this.apiUrl).subscribe({
-        next: (tasks) => {
-          // Encontrar o step correto
-          const step = tasks.find(task => task.id === card.stepId);
+    return this.fetchSteps().pipe(
+      map(steps => steps.find(step => step.id === card.stepId)),
+      switchMap(step => {
+        if (!step) throw new Error('Step não encontrado');
+        return this.http.patch(`${this.apiUrl}/${step.id}`, { cards: [...step.cards, card] });
+      })
+    );
+  }
 
-          if (step) {
-            const updatedCards = [...step.cards, card]; // Adicionar o novo card ao array de cards
+  updateStepCard(cardId: string, newStepId: string): Observable<any> {
+    return this.fetchSteps().pipe(
+      switchMap(steps => {
+        const oldStep = steps.find(step => step.cards.some(card => card.id === cardId));
+        const newStep = steps.find(step => step.id === newStepId);
+        if (!oldStep || !newStep) throw new Error('Step não encontrado');
 
-            // Atualizar apenas esse step no JSON Server
-            this.http.patch(`${this.apiUrl}/${step.id}`, { cards: updatedCards }).subscribe({
-              next: (response) => {
-                observer.next(response);
-                observer.complete();
-              },
-              error: (err) => observer.error(err)
-            });
-          } else {
-            observer.error('Step não encontrado');
-          }
-        },
-        error: (err) => observer.error(err),
-      });
-    });
+        const card = oldStep.cards.find(card => card.id === cardId);
+        if (!card) throw new Error('Card não encontrado');
+
+        return this.http.patch(`${this.apiUrl}/${oldStep.id}`, {
+          cards: oldStep.cards.filter(c => c.id !== cardId)
+        }).pipe(
+          switchMap(() => this.http.patch(`${this.apiUrl}/${newStep.id}`, {
+            cards: [...newStep.cards, { ...card, stepId: newStepId }]
+          }))
+        );
+      })
+    );
   }
 
   removeCard(card: Card): Observable<any> {
-    return new Observable(observer => {
-      this.http.get<any[]>(this.apiUrl).subscribe({
-        next: (tasks: Step[]) => {
-          // Encontrar o step correto
-          const step = tasks.find(task => task.id === card.stepId);
-
-          if (step) {
-            // Remover o card do array de cards do step
-            const updatedCards = step.cards.filter((c: Card) => c.id !== card.id);
-            console.log(updatedCards)
-            // Atualizar o JSON Server com o novo array de cards
-            this.http.patch(`${this.apiUrl}/${step.id}`, { cards: updatedCards }).subscribe({
-              next: (response) => {
-                observer.next(response);
-                observer.complete();
-              },
-              error: (err) => observer.error(err)
-            });
-          } else {
-            observer.error('Step não encontrado');
-          }
-        },
-        error: (err) => observer.error(err),
-      });
-    });
+    return this.fetchSteps().pipe(
+      switchMap(steps => {
+        const step = steps.find(s => s.id === card.stepId);
+        if (!step) throw new Error('Step não encontrado');
+        return this.http.patch(`${this.apiUrl}/${step.id}`, {
+          cards: step.cards.filter(c => c.id !== card.id)
+        });
+      })
+    );
   }
 }

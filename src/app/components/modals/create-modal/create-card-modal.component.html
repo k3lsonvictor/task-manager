@@ -10,13 +10,23 @@
   </div>
   <!-- <div>Aqui {{step.id}}</div> -->
   @if(!project){
-  <button (click)="createCard()">
+  <!-- <button (click)="createCard()">
     Criar
-  </button>
+  </button> -->
+  @if(modalType === "createModal"){
+    <button (click)="createCard()">
+      Criar
+    </button>
+  }
+  @if(modalType === "createProjectModal"){
+    <button (click)="onCreateProject()">
+      Criar
+    </button>
+  }
   }
   @if(project){
-    <button (click)="editProjectModal()">
-      Concluir
-    </button>
-    }
+  <button (click)="editProjectModal()">
+    Concluir
+  </button>
+  }
 </app-base-modal>

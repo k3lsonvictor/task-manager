@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { Project, ProjectsService } from '../../services/api/projects.service';
 
 @Component({
@@ -11,7 +11,7 @@ import { Project, ProjectsService } from '../../services/api/projects.service';
 export class HomeLayoutComponent {
   projects!: Project[];
 
-  constructor(private projectsServices: ProjectsService) { }
+  constructor(private projectsServices: ProjectsService, private router: Router) { }
 
   ngOnInit() {
     this.projectsServices.getProjects().subscribe(projects => {
@@ -31,4 +31,12 @@ export class HomeLayoutComponent {
       })
     })
   }
+
+onLogout() {
+  // Remove o token do localStorage
+  localStorage.removeItem('token');
+  
+  // Redireciona para a página de login
+  this.router.navigate(['/login']);
+}
 }

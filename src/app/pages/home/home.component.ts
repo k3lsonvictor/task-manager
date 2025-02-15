@@ -10,6 +10,7 @@ import { DetailCardModalComponent } from '../../components/modals/detail-modal/d
 import { Project, ProjectsService } from '../../services/api/projects.service';
 import { ActivatedRoute } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
+import { CardService } from '../../services/api/card.service';
 
 @Component({
   selector: 'app-home',
@@ -35,11 +36,14 @@ export class HomeComponent {
 
   isEditingProject: boolean = false;
 
-  constructor(private route: ActivatedRoute, private stepService: StepService, private modalService: ModalService, private projectsService: ProjectsService) {
+  isCreatingProject: boolean = false;
+
+  constructor(private route: ActivatedRoute, private stepService: StepService, private modalService: ModalService, private projectsService: ProjectsService, private cardService: CardService) {
     this.modalService.modalsState$.subscribe(state => {
       this.detailCardModalIsOpen = state["detailModal"] || false;
       this.createCardModalIsOpen = state["createModal"] || false;
       this.isEditingProject = state["editProjectModal"] || false;
+      this.isCreatingProject = state["createProjectModal"] || false;
     })
     this.projectsService.currentProject$.subscribe(state => {
       if (state) {
@@ -51,6 +55,11 @@ export class HomeComponent {
   onEditProject() {
     this.isEditingProject = true;
     this.modalService.openModal("editProjectModal")
+  }
+
+  onCreateProject() {
+    this.isCreatingProject = true;
+    this.modalService.openModal("createProjectModal")
   }
 
   ngOnInit() {
@@ -99,6 +108,12 @@ export class HomeComponent {
   }
 
   drop(event: CdkDragDrop<Card[]>) {
+    const previousStepId = this.extractStepId(event.previousContainer.id);
+    const newStepId = this.extractStepId(event.container.id);
+  
+    console.log('Step anterior:', previousStepId);
+    console.log('Step novo:', newStepId);
+  
     if (event.previousContainer === event.container) {
       moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
     } else {
@@ -108,6 +123,23 @@ export class HomeComponent {
         event.previousIndex,
         event.currentIndex
       );
+  
+      // Atualizar o card para o novo step no backend
+      const movedCard = event.container.data[event.currentIndex];
+      this.updateCardStep(movedCard.id, newStepId);
     }
+  }
+  
+  // Função auxiliar para extrair o ID correto do step
+  private extractStepId(dropListId: string): string {
+    return dropListId.replace('step-', ''); // Remove "step-" para pegar apenas o número do ID
+  }
+  
+  // Método para atualizar o card no backend
+  updateCardStep(cardId: string, stepId: string) {
+    this.cardService.updateStepCard(cardId, stepId).subscribe({
+      next: () => console.log(`Card ${cardId} atualizado para o Step ${stepId}`),
+      error: err => console.error('Erro ao atualizar o card:', err)
+    });
   }
 }

@@ -1,13 +1,16 @@
 <div class="layout-container">
   <div class="content">
-    <aside class="sidebar">
+    <aside>
       <h3>Projetos</h3>
-      <div class="projects">
-        @for (project of projects; track project.id) {
-        <a [routerLink]="['/tasks', project.id]">
-          <div class="project-title">{{ project.title }}</div>
-        </a>
-        }
+      <div class="sidebar">
+        <div class="projects">
+          @for (project of projects; track project.id) {
+          <a [routerLink]="['/tasks', project.id]">
+            <div class="project-title">{{ project.title }}</div>
+          </a>
+          }
+        </div>
+        <button (click)="onLogout()">Logout</button>
       </div>
     </aside>
     <div class="main-content">
