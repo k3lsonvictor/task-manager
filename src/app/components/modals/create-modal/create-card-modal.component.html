@@ -1,4 +1,4 @@
-<app-base-modal modalType="createModal">
+<app-base-modal (closed)="closeModal()">
   <div class="modal-title">
     <label for="">Título</label>
     <input class="input-title" type="text" [formControl]="title">
@@ -9,7 +9,14 @@
     <textarea class="area-description" [formControl]="description"></textarea>
   </div>
   <!-- <div>Aqui {{step.id}}</div> -->
+  @if(!project){
   <button (click)="createCard()">
     Criar
   </button>
+  }
+  @if(project){
+    <button (click)="editProjectModal()">
+      Concluir
+    </button>
+    }
 </app-base-modal>

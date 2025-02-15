@@ -24,5 +24,11 @@ export class HomeLayoutComponent {
         console.log("Projeto atualizado no layout:", project);
       }
     });
+
+    this.projectsServices.projectUpdated$.subscribe(() => {
+      this.projectsServices.getProjects().subscribe(projects => {
+        this.projects = projects;
+      })
+    })
   }
 }

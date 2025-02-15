@@ -5,6 +5,7 @@ import { Step } from '../../step-collumn/step-collumn.component';
 import { StepService } from '../../../services/api/step-service.service';
 import { BaseModalComponent } from '../base-modal/base-modal.component';
 import { ModalService } from '../../../services/modals/modal.service';
+import { Project, ProjectsService } from '../../../services/api/projects.service';
 
 @Component({
   selector: 'app-create-modal',
@@ -13,7 +14,9 @@ import { ModalService } from '../../../services/modals/modal.service';
   styleUrl: './create-card-modal.component.css',
 })
 export class CreateModalComponent {
+  @Input() modalType!: string;
   selStep!: Step | null;
+  @Input() project!: Project | null;
 
   title = new FormControl<string>("")
   description = new FormControl<string>("")
@@ -21,13 +24,34 @@ export class CreateModalComponent {
   constructor(
     private modalService: ModalService,
     private cardService: CardService,
-    private stepService: StepService
+    private stepService: StepService,
+    private projectsService: ProjectsService,
   ) {}
 
   ngOnInit() {
     this.stepService.selectedStep$.subscribe(selectedStep => {
       this.selStep = selectedStep
     });
+
+    if (this.modalType === "editProjectModal" && this.project) {
+      console.log(this.project)
+      this.title.setValue(this.project.title);
+      this.description.setValue(this.project?.description ?? "");
+    }
+  }
+
+  editProjectModal() {
+    if (this.project === null) {
+      console.log("aqui")
+      return
+    }
+    console.log("aqui")
+    this.projectsService.editProject(this.title.value!, this.description.value!, this.project.id).subscribe({
+      next: () => {
+        this.projectsService.notifyProjectUpdate();
+        this.closeModal();
+      }
+    })
   }
 
   createCard() {
@@ -49,6 +73,7 @@ export class CreateModalComponent {
   }
 
   closeModal() {
-    this.modalService.closeModal("createModal");
+    console.log(this.modalType);
+    this.modalService.closeModal(this.modalType);
   }
 }

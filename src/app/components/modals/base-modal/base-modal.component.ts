@@ -10,9 +10,12 @@ import { MatIconModule } from '@angular/material/icon';
 })
 export class BaseModalComponent {
   @Input() modalType!: string;
+  @Output() closed = new EventEmitter<string>(); // 🔹 Criação do Output
+
   constructor(private modalService: ModalService) {}
 
   onCloseModal() {
     this.modalService.closeModal(this.modalType);
+    this.closed.emit(); // 🔹 Emite o evento para o pai
   }
 }

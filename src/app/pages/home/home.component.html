@@ -2,7 +2,12 @@
   <div class="welcome-title">Bem vindo de Volta!</div>
   <div class="project-header">
     <div>
-      <div class="project-name">{{project.title}}</div>
+      <div class="container-project-title">
+        <div class="project-name">{{project.title}}</div>
+        <button class="edit-project-name" (click)="onEditProject()">
+          <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="edit"></mat-icon>
+        </button>
+      </div>
       <p>{{project.description}}</p>
     </div>
     <app-button (click)="createStep()">Nova Etapa</app-button>
@@ -17,8 +22,12 @@
 </main>
 
 @if(detailCardModalIsOpen) {
-  <app-detail-card-modal></app-detail-card-modal>
+<app-detail-card-modal></app-detail-card-modal>
 }
 @if(createCardModalIsOpen) {
-  <app-create-modal></app-create-modal>
+<app-create-modal modalType="createModal"></app-create-modal>
+}
+
+@if(isEditingProject) {
+  <app-create-modal modalType="editProjectModal" [project]="project"></app-create-modal>
 }
