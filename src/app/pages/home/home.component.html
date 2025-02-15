@@ -21,7 +21,7 @@
         (cdkDragEntered)="onDragEnter(step.id)" 
         (cdkDragExited)="onDragLeave()"
         cdkDropList 
-        [cdkDropListData]="steps"
+        [cdkDropListData]="step.cards"
         (cdkDropListDropped)="drop($event)" 
         [step]="step">
       </app-step-collumn>
