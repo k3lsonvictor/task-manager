@@ -133,7 +133,7 @@ export class HomeComponent {
     });
   }
 
-  drop(event: CdkDragDrop<Step[]>) {
+  drop(event: CdkDragDrop<Card[]>) {
     const previousStepId = this.extractStepId(event.previousContainer.id);
     const newStepId = this.extractStepId(event.container.id);
 
