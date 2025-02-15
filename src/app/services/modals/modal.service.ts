@@ -17,16 +17,4 @@ export class ModalService {
   closeModal(modalId: string) {
     this.modalsState.next({ ...this.modalsState.value, [modalId]: false });
   }
-
-
-  // private selectedCardSource = new BehaviorSubject<Card | null>(null);
-  // selectedCard$ = this.selectedCardSource.asObservable();
-
-  // openModal(card: Card) {
-  //   this.selectedCardSource.next(card);
-  // }
-
-  // closeModal() {
-  //   this.selectedCardSource.next(null);
-  // }
 }
