@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { ModalService } from '../../services/modals/modal.service';
 import { MatIconModule } from '@angular/material/icon';
 import { CardService } from '../../services/api/card.service';
@@ -23,7 +23,12 @@ export class CardComponent {
   @Input() card!: Card;
   @Input() cards!: Card[];
 
-  constructor(private modalService: ModalService, private cardService: CardService, private taskService: TaskService) {}
+  @Output() openCard = new EventEmitter();
+
+  detailCardModalIsOpen: boolean = false;
+
+  constructor(private modalService: ModalService, private cardService: CardService, private taskService: TaskService) {
+  }
 
   deleteTask(event: Event) {
     event.stopPropagation();
@@ -34,7 +39,8 @@ export class CardComponent {
     });
   }
 
-  onClick() {
-    this.modalService.openModal(this.card);
+  openDetailCardModal() {
+    this.cardService.selectCard(this.card);
+    this.modalService.openModal("detailModal");
   }
 }

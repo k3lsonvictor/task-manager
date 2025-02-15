@@ -11,8 +11,11 @@ export class CardService {
   private selectedStepSource = new BehaviorSubject<Step | null>(null);
   selectedStep$ = this.selectedStepSource.asObservable();
 
-  selectStep(step: Step) {
-    this.selectedStepSource.next(step)
+  private selectedCardSource = new BehaviorSubject<Card | null>(null);
+  selectedCard$ = this.selectedCardSource.asObservable();
+
+  selectCard(card: Card) {
+    this.selectedCardSource.next(card);
   }
 
   private apiUrl = 'http://localhost:3000/tasks';
@@ -24,10 +27,6 @@ export class CardService {
       month: '2-digit',
       year: 'numeric'
     });
-  }
-
-  setSelectedStep(step: Step) {
-    this.selectedStepSource.next(step); // 🚀 Atualiza o step selecionado
   }
 
   createCard(title: string, tag: string = 'tag-exemplo', stepId: string, description?: string): Card {

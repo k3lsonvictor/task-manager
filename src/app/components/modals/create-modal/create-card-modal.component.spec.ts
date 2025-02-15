@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { CreateModalComponent } from './create-modal.component';
+import { CreateModalComponent } from './create-card-modal.component';
 
 describe('CreateModalComponent', () => {
   let component: CreateModalComponent;

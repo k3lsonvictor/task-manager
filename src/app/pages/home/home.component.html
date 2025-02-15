@@ -16,8 +16,9 @@
   </div>
 </main>
 
-@if(selectedCard) {
-  <div class="container-modal">
-    <app-modal></app-modal>
-  </div>
+@if(detailCardModalIsOpen) {
+  <app-detail-card-modal></app-detail-card-modal>
+}
+@if(createCardModalIsOpen) {
+  <app-create-modal></app-create-modal>
 }

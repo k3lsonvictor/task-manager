@@ -10,11 +10,10 @@ import { ModalService } from '../../../services/modals/modal.service';
 @Component({
   selector: 'app-create-modal',
   imports: [BaseModalComponent, ReactiveFormsModule],
-  templateUrl: './create-modal.component.html',
-  styleUrl: './create-modal.component.css',
+  templateUrl: './create-card-modal.component.html',
+  styleUrl: './create-card-modal.component.css',
 })
 export class CreateModalComponent {
-  newCardModal: boolean = false;
   selStep!: Step | null;
 
   @Input() step!: Step;
@@ -28,9 +27,10 @@ export class CreateModalComponent {
     private cardService: CardService,
     private taskService: TaskService
   ) {
-    this.createNewModalService.newModal$.subscribe(value => {
-      this.newCardModal = value;
-    })
+    // this.createNewModalService.newModal$.subscribe(value => {
+    //   this.newCardModal = value;
+    //   this.isOpen = !!value;
+    // })
   }
 
   ngOnInit() {
@@ -49,13 +49,13 @@ export class CreateModalComponent {
       next: () => {
         this.taskService.notifyTaskUpdate();
         this.taskService.getTasks(); // Atualiza as tarefas após a criação do card
-        this.createNewModalService.closeModal();
+        this.modalService.closeModal("createModal");
       },
       error: (err) => console.error('Erro ao criar card:', err)
     });
   }
 
   closeModal() {
-    this.modalService.closeModal();
+    this.modalService.closeModal("createModal");
   }
 }

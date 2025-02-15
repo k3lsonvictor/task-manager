@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { ModalService } from '../../../services/modals/modal.service';
 import { MatIconModule } from '@angular/material/icon';
 
@@ -9,9 +9,10 @@ import { MatIconModule } from '@angular/material/icon';
   styleUrl: './base-modal.component.css'
 })
 export class BaseModalComponent {
+  @Input() modalType!: string;
   constructor(private modalService: ModalService) {}
 
-  closeModal() {
-    this.modalService.closeModal();
+  onCloseModal() {
+    this.modalService.closeModal(this.modalType);
   }
 }
