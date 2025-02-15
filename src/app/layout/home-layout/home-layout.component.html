@@ -1,7 +1,10 @@
 <div class="layout-container">
   <div class="content">
     <aside>
-      <h3>Projetos</h3>
+      <div class="projects-header">
+        <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="window"></mat-icon>
+        <h3>Projetos</h3>
+      </div>
       <div class="sidebar">
         <div class="projects">
           @for (project of projects; track project.id) {
@@ -14,9 +17,9 @@
             </button>
           </div>
           }
-          <button (click)="onCreateProject()">Novo Projeto</button>
+          <app-button (click)="onCreateProject()">Novo Projeto</app-button>
         </div>
-        <button (click)="onLogout()">Logout</button>
+        <app-button (click)="onLogout()">Logout</app-button>
       </div>
     </aside>
     <div class="main-content">

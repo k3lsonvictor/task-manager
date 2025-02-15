@@ -11,6 +11,8 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+  padding-bottom: 20px;
 }
 
 .delete-project {
@@ -59,6 +61,16 @@ a {
   font-size: 18px;
 }
 
+.projects-header {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  width: 100%;
+  padding-bottom: 10px;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+  font-weight: 900;
+}
+
 aside {
   padding: 30px;
   background-color: var(--secondary-color);
@@ -77,12 +89,12 @@ aside {
   justify-content: space-between;
 }
 
-h3 {
+/* h3 {
   width: 100%;
   padding-bottom: 10px;
   border-bottom: 2px solid rgba(255, 255, 255, 0.2);
   font-weight: 900;
-}
+} */
 
 .main-content {
   width: 100%;

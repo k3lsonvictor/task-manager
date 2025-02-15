@@ -90,6 +90,12 @@ main {
   font-weight: 600;
 }
 
+.new-project{
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
 .edit-project-name {
   background-color: transparent;
   border: none;

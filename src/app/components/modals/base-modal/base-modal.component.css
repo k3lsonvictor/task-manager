@@ -35,3 +35,14 @@ mat-icon {
   height: auto;
   font-size: 20px;
 }
+
+main {
+  
+  position: fixed;
+  top: 0;
+  right: 0;
+  display: flex;
+  width: 100vw;
+  height: 100vh;
+  backdrop-filter: blur(7px);
+}

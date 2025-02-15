@@ -36,12 +36,12 @@
           "description": ""
         },
         {
-          "title": "teste em prod",
+          "title": "Fazer projeto",
           "tag": "",
           "limiteDate": "15/02/2025",
           "stepId": "9c22942e-0dc9-4f28-9614-144f85246344",
-          "id": "821293d7-da4d-439c-b672-c6a58677a9a4",
-          "description": ""
+          "id": "11933e67-01fc-406b-9f0b-a39e9541b285",
+          "description": "Fazer projeto para apresentar na entrevista técnica. O projeto escolhido foi um gerenciador de task"
         }
       ],
       "projectId": "1"
@@ -82,12 +82,12 @@
           "description": ""
         },
         {
-          "title": "Fazer projeto",
+          "title": "teste em prod",
           "tag": "",
           "limiteDate": "15/02/2025",
           "stepId": "5a5798b8-6927-4073-bf80-246399b08009",
-          "id": "11933e67-01fc-406b-9f0b-a39e9541b285",
-          "description": "Fazer projeto para apresentar na entrevista técnica. O projeto escolhido foi um gerenciador de task"
+          "id": "821293d7-da4d-439c-b672-c6a58677a9a4",
+          "description": ""
         }
       ],
       "projectId": "1"
