@@ -20,6 +20,10 @@ export class LoginComponent {
 
   constructor(private loginService: LoginService, private router: Router) {}
 
+  navigateToSignin() {
+    this.router.navigate(['/signin']); // Altere para a rota desejada
+  }
+
   login() {
     if (this.loginForm.invalid) {
       alert('Preencha os campos corretamente!');

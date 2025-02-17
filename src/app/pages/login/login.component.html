@@ -1,9 +1,11 @@
 <main>
   <div class="container-login">
     <div class="description-login-area">
-      <div>COMECE DE GRAÇA</div>
-      <h1>Crie uma nova conta.</h1>
+      <div>Gerencie suas tarefa com facilidade!</div>
+      <h1>TASK MANAGER</h1>
       <div>Faça login aqui.</div>
+      <div>Ou</div>
+      <button (click)="navigateToSignin()">Crie uma conta</button>
     </div>
     <form [formGroup]="loginForm" (ngSubmit)="login()">
       <app-input label="Email" [control]="loginForm.controls.email" type="email" placeholder="Digite seu e-mail" />
