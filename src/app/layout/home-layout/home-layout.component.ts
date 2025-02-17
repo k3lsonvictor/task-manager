@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
-import { Project, ProjectsService } from '../../services/api/projects.service';
+import { Project, ProjectsService } from '../../api/services/projects.service';
 import { MatIconModule } from '@angular/material/icon';
 import { ButtonComponent } from '../../components/button/button.component';
 
@@ -16,6 +16,8 @@ export class HomeLayoutComponent {
   constructor(private projectsServices: ProjectsService, private router: Router) { }
 
   ngOnInit() {
+    console.log(this.projects)
+
     this.projectsServices.getProjects().subscribe(projects => {
       this.projects = projects;
     })

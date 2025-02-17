@@ -2,7 +2,7 @@
   <div class="container-header-step">
     @if(!isEditing) {
     <div class="container-step-title">
-      <p class="step-title">{{ step.title }}({{ step.cards.length }})</p>
+      <p class="step-title">{{ step.name }}({{ step.tasks.length }})</p>
       <button class="edit-step-name" (click)="onEditStep()">
         <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="edit"></mat-icon>
       </button>
@@ -29,7 +29,7 @@
     </div>
   </div>
   <div class="container-cards">
-    @for (card of step.cards; track card) {
+    @for (card of step.tasks; track card) {
     <app-card class="teste1" [card]="card" [cards]="cards" cdkDrag></app-card>
     }
   </div>

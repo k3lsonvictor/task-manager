@@ -1,8 +1,8 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { ModalService } from '../../services/modals/modal.service';
 import { MatIconModule } from '@angular/material/icon';
-import { CardService } from '../../services/api/card.service';
-import { StepService } from '../../services/api/step-service.service';
+import { CardService } from '../../api/services/card.service';
+import { StepService } from '../../api/services/step-service.service';
 
 export interface Card {
   title: string;
@@ -13,6 +13,12 @@ export interface Card {
   description?: string;
 }
 
+export interface SimpleCard {
+  title: string;
+  id: string;
+  position: number;
+}
+
 @Component({
   selector: 'app-card',
   imports: [MatIconModule],
@@ -20,8 +26,8 @@ export interface Card {
   styleUrl: './card.component.css'
 })
 export class CardComponent {
-  @Input() card!: Card;
-  @Input() cards!: Card[];
+  @Input() card!: SimpleCard | Card;
+  @Input() cards!: SimpleCard[];
 
   @Output() openCard = new EventEmitter();
 
@@ -32,7 +38,7 @@ export class CardComponent {
 
   deleteStep(event: Event) {
     event.stopPropagation();
-    this.cardService.removeCard(this.card).subscribe({
+    this.cardService.removeCard(this.card.id).subscribe({
       next: () => {
         this.stepService.notifyStepUpdate();
       }
@@ -40,7 +46,11 @@ export class CardComponent {
   }
 
   openDetailCardModal() {
-    this.cardService.selectCard(this.card);
-    this.modalService.openModal("detailModal");
+    this.cardService.getCard(this.card.id).subscribe(card => {
+      // O card retornado agora está armazenado no selectedCardSource
+      // A qualquer momento, você pode acessar o card via o BehaviorSubject
+      this.cardService.selectCard(card);
+      this.modalService.openModal("detailModal");
+    });
   }
 }

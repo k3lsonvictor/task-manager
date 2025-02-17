@@ -1,9 +1,9 @@
 <main>
-  <div class="welcome-title">Bem vindo de Volta!</div>
+  <div class="welcome-title">Bem vindo de Volta, {{user.name}}!</div>
   @if(project){<div class="project-header">
     <div>
       <div class="container-project-title">
-        <div class="project-name">{{project.title}}</div>
+        <div class="project-name">{{project.name}}</div>
         <button class="edit-project-name" (click)="onEditProject()">
           <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="edit"></mat-icon>
         </button>
@@ -21,7 +21,7 @@
         (cdkDragEntered)="onDragEnter(step.id)" 
         (cdkDragExited)="onDragLeave()"
         cdkDropList 
-        [cdkDropListData]="step.cards"
+        [cdkDropListData]="step.tasks"
         (cdkDropListDropped)="drop($event)" 
         [step]="step">
       </app-step-collumn>

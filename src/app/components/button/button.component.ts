@@ -7,6 +7,6 @@ import { Component, Input } from '@angular/core';
   styleUrl: './button.component.css'
 })
 export class ButtonComponent {
-  @Input() clickFunction!: () => void;
+  @Input() clickFunction: (() => void) | null = null;
   @Input() content!: string;
 }

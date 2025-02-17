@@ -3,7 +3,7 @@ import { ModalService } from '../../../services/modals/modal.service';
 import { MatIconModule } from '@angular/material/icon';
 import { Card } from '../../card/card.component';
 import { BaseModalComponent } from '../base-modal/base-modal.component';
-import { CardService } from '../../../services/api/card.service';
+import { CardService } from '../../../api/services/card.service';
 
 @Component({
   selector: 'app-detail-card-modal',

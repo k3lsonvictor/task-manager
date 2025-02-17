@@ -10,7 +10,7 @@
           @for (project of projects; track project.id) {
           <div class="container-select-project">
             <a [routerLink]="['/tasks', project.id]">
-              <div class="project-title">{{ project.title }}</div>
+              <div class="project-title">{{ project.name }}</div>
             </a>
             <button class="delete-project" (click)="onDeleteProject(project.id)">
               <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="delete"></mat-icon>

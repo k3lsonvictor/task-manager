@@ -2,14 +2,18 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Card, CardComponent } from '../card/card.component';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { MatIconModule } from '@angular/material/icon';
-import { StepService } from '../../services/api/step-service.service';
+import { StepService } from '../../api/services/step-service.service';
 import { ModalService } from '../../services/modals/modal.service';
 import { FormsModule } from '@angular/forms';
 
 export interface Step {
-  title: string;
+  name: string;
   id: string;
-  cards: Card[];
+  tasks: {
+    title: string,
+    id: string,
+    position: number;
+  }[];
   projectId: string;
 }
 
@@ -31,7 +35,7 @@ export class StepCollumnComponent {
   constructor(private modalService: ModalService, private stepService: StepService) { }
 
   ngOnInit() {
-    this.setTitleStep = this.step.title;
+    this.setTitleStep = this.step.name;
   }
 
   onCreateStep() {
@@ -56,7 +60,7 @@ export class StepCollumnComponent {
     if (this.setTitleStep.trim()) {
       this.stepService.editStepName(this.setTitleStep, this.step.id).subscribe({
         next: () => {
-          this.step.title = this.setTitleStep; // Atualiza a exibição
+          this.step.name = this.setTitleStep; // Atualiza a exibição
           this.isEditing = false;
           this.stepService.notifyStepUpdate();
         }
