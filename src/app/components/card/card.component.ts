@@ -7,7 +7,7 @@ import { CommonModule } from '@angular/common';
 
 export interface Card {
   title: string;
-  tag?: string;
+  tag: string | null;
   limiteDate: string;
   stepId: string;
   id: string;
@@ -22,7 +22,7 @@ export interface SimpleCard {
     id: string;
     name: string;
     color: string;
-  }
+  } | null;
 }
 
 @Component({
@@ -42,9 +42,8 @@ export class CardComponent {
   constructor(private modalService: ModalService, private cardService: CardService, private stepService: StepService) {
   }
 
-  onInit() {
+  ngOnInit() {
     console.log(this.card)
-
   }
 
   deleteStep(event: Event) {

@@ -17,7 +17,7 @@ export interface Step {
       name: string;
       color: string;
       id: string;
-    }
+    } | null;
   }[];
   projectId: string;
 }

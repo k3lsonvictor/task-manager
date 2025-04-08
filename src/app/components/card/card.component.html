@@ -1,4 +1,4 @@
-<div class="card" [ngStyle]="{ 'background-color': card.tag.color}" (click)="openDetailCardModal()">
+<div class="card" [ngStyle]="{ 'background-color': card.tag?.color }" (click)="openDetailCardModal()">
   <div class="card-header">
     <p class="title">{{card.title}}</p>
     <button class="delete-card" (click)="deleteStep($event)">
