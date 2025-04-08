@@ -14,6 +14,7 @@ import { CardService } from '../../api/services/card.service';
 import { Subscription } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { User, UserService } from '../../api/services/user.service';
+import { Tag, TagsService } from '../../api/services/tags.service';
 
 @Component({
   selector: 'app-home',
@@ -33,6 +34,8 @@ export class HomeComponent {
   project!: Project;
   steps: Step[] = [];
   user!: User;
+
+  tags: Tag[] = [];
 
   selectedCard: Card | null = null;
 
@@ -70,7 +73,8 @@ export class HomeComponent {
     private modalService: ModalService,
     private projectsService: ProjectsService,
     private cardService: CardService,
-    private userService: UserService
+    private userService: UserService,
+    private tagsService: TagsService
   ) {
     this.modalService.modalsState$.subscribe(state => {
       this.detailCardModalIsOpen = state["detailModal"] || false;
@@ -125,6 +129,11 @@ export class HomeComponent {
               s.tasks.sort((a, b) => a.position - b.position);  // Ordenação por position
             });
             this.steps = step;
+          });
+
+          this.tagsService.getTags(project.id).subscribe(tags => {
+            console.log('Tags do projeto:', tags);  // Log para verificar
+            this.tags = tags;  // Salva as tags no projeto
           });
         });
       }

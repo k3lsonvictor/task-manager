@@ -3,6 +3,7 @@ import { ModalService } from '../../services/modals/modal.service';
 import { MatIconModule } from '@angular/material/icon';
 import { CardService } from '../../api/services/card.service';
 import { StepService } from '../../api/services/step-service.service';
+import { CommonModule } from '@angular/common';
 
 export interface Card {
   title: string;
@@ -17,23 +18,33 @@ export interface SimpleCard {
   title: string;
   id: string;
   position: number;
+  tag: {
+    id: string;
+    name: string;
+    color: string;
+  }
 }
 
 @Component({
   selector: 'app-card',
-  imports: [MatIconModule],
+  imports: [MatIconModule, CommonModule],
   templateUrl: './card.component.html',
   styleUrl: './card.component.css'
 })
 export class CardComponent {
-  @Input() card!: SimpleCard | Card;
-  @Input() cards!: SimpleCard[];
+  @Input() card!: SimpleCard;
+  @Input() cards!: SimpleCard[]; 
 
   @Output() openCard = new EventEmitter();
 
   detailCardModalIsOpen: boolean = false;
 
   constructor(private modalService: ModalService, private cardService: CardService, private stepService: StepService) {
+  }
+
+  onInit() {
+    console.log(this.card)
+
   }
 
   deleteStep(event: Event) {
