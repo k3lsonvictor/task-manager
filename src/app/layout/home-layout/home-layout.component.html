@@ -1,14 +1,17 @@
 <div class="layout-container">
   <div class="content">
     <aside>
-      <div class="projects-header">
-        <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="window"></mat-icon>
-        <h3>Projetos</h3>
+      <div class="projects-header !gap-10">
+        <img src="imagem.png" alt="" class="w-auto h-auto display-block" />
+        <div class="flex gap-2">
+          <mat-icon fontIcon="view_timeline" class="!text-[30px] font-normal"></mat-icon>
+          <h3 class="font-normal text-[18px]">Projetos</h3>
+        </div>
       </div>
-      <div class="sidebar">
-        <div class="projects">
+      <div class="sidebar w-full">
+        <div class="projects !mt-4">
           @for (project of projects; track project.id) {
-          <div class="container-select-project">
+          <div class="container-select-project bg-[#3A3B4E] flex !justify-between !px-4 !items-center rounded-md !border-none !py-4 !w-full">
             <a [routerLink]="['/tasks', project.id]">
               <div class="project-title">{{ project.name }}</div>
             </a>

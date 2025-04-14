@@ -12,6 +12,7 @@ import { ButtonComponent } from '../../components/button/button.component';
 })
 export class HomeLayoutComponent {
   projects!: Project[];
+  path: string = "assets/imagem.png";
 
   constructor(private projectsServices: ProjectsService, private router: Router) { }
 
