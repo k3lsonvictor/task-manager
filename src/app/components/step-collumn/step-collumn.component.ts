@@ -13,6 +13,11 @@ export interface Step {
     title: string,
     id: string,
     position: number;
+    tag: {
+      name: string;
+      color: string;
+      id: string;
+    } | null;
   }[];
   projectId: string;
 }
@@ -36,6 +41,7 @@ export class StepCollumnComponent {
 
   ngOnInit() {
     this.setTitleStep = this.step.name;
+    console.log(this.cards)
   }
 
   onCreateStep() {

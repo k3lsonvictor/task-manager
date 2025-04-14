@@ -1,35 +1,77 @@
 <main>
-  <div class="welcome-title">Bem vindo de Volta, {{user.name}}!</div>
-  @if(project){<div class="project-header">
-    <div>
-      <div class="container-project-title">
-        <div class="project-name">{{project.name}}</div>
-        <button class="edit-project-name" (click)="onEditProject()">
-          <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="edit"></mat-icon>
-        </button>
+  <!-- <div class="welcome-title">Bem vindo de Volta, {{user.name}}!</div> -->
+  @if(project){
+    <div class="flex flex-col !mb-10">
+      <div class="project-header !rounded-t-2xl !rounded-b-none !pb-6 !mb-0 !inset-shadow-none !border-none">
+        <div class="title-and-description w-full">
+          <div class="container-project-title border-b-solid border-b-1 border-white pb-2">
+            <div class="project-name">{{ project.name }}</div>
+            <button class="edit-project-name" (click)="onEditProject()">
+              <mat-icon
+                aria-hidden="false"
+                aria-label="Example home icon"
+                fontIcon="edit"
+              ></mat-icon>
+            </button>
+          </div>
+          <p>{{ project.description }}</p>
+        </div>
       </div>
-      <p>{{project.description}}</p>
+      <div>
+        <div class="!rounded-t-none !rounded-b-2xl !inset-shadow-none !border-none bg-[rgba(65,65,65,0.3)]">
+          <div class="flex w-full px-[30px] !py-6 text-white gap-2">
+            Tags:
+            <div class="flex gap-2">
+              @for (tag of tags; track tag.id){
+                <div 
+                  [ngStyle]="{ 'background-color': tag.color }" 
+                  class="rounded-full px-2 py-1 text-xs font-semibold mr-2 mb-2"
+                >
+                  {{ tag.name }}
+                </div>
+              }
+            </div>
+            <div>
+              <button class="add-tag">
+                <mat-icon
+                  aria-hidden="false"
+                  aria-label="Example home icon"
+                  fontIcon="add"
+                ></mat-icon>
+              </button>
+            </div>
+          </div> 
+        </div>
+      </div>
     </div>
-    <app-button (click)="createStep()">Nova Etapa</app-button>
-  </div>
-  <div class="container-steps" cdkDropListGroup>
+  
+  <app-button (click)="createStep()">
+    <div class="flex items-center justify-center bg-white rounded-md !w-[24px]">
+      <mat-icon class="!text-[#5252D9]" fontIcon="add"></mat-icon>
+    </div>
+    Nova Etapa
+  </app-button>
+  <div class="container-steps !mt-4" cdkDropListGroup>
     @for (step of steps; track step; let i = $index) {
-      <app-step-collumn 
-        class="step-column" 
-        [id]="'step-' + step.id" 
-        [ngClass]="{'drag-over': activeStepId === step.id}"
-        (cdkDragEntered)="onDragEnter(step.id)" 
-        (cdkDragExited)="onDragLeave()"
-        cdkDropList 
-        [cdkDropListData]="step.tasks"
-        (cdkDropListDropped)="drop($event)" 
-        [step]="step">
-      </app-step-collumn>
+    <app-step-collumn
+      class="step-column"
+      [id]="'step-' + step.id"
+      [ngClass]="{ 'drag-over': activeStepId === step.id }"
+      (cdkDragEntered)="onDragEnter(step.id)"
+      (cdkDragExited)="onDragLeave()"
+      cdkDropList
+      [cdkDropListData]="step.tasks"
+      (cdkDropListDropped)="drop($event)"
+      [step]="step"
+    >
+    </app-step-collumn>
     }
-  </div>}
-  @else {
+  </div>
+  } @else {
   <div class="new-project">
-    <div class="none-project">Escolha um projeto ao lado ou crie um novo projeto</div>
+    <div class="none-project">
+      Escolha um projeto ao lado ou crie um novo projeto
+    </div>
     <app-button (click)="onCreateProject()">Novo Projeto</app-button>
   </div>
   }
@@ -37,17 +79,14 @@
 
 @if(detailCardModalIsOpen) {
 <app-detail-card-modal></app-detail-card-modal>
-}
-
-@if(createCardModalIsOpen) {
+} @if(createCardModalIsOpen) {
 <app-create-modal modalType="createModal"></app-create-modal>
-}
-
-@if(isEditingProject) {
-<app-create-modal modalType="editProjectModal" [project]="project"></app-create-modal>
-}
-
-@if(isCreatingProject) {
-  <div>Aqui</div>
+} @if(isEditingProject) {
+<app-create-modal
+  modalType="editProjectModal"
+  [project]="project"
+></app-create-modal>
+} @if(isCreatingProject) {
+<div>Aqui</div>
 <app-create-modal modalType="createProjectModal"></app-create-modal>
 }

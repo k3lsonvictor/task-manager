@@ -1,8 +1,13 @@
-<div class="container-step">
+<div class="container-step !bg-[rgba(65,65,65,0.2)]">
   <div class="container-header-step">
     @if(!isEditing) {
     <div class="container-step-title">
-      <p class="step-title">{{ step.name }}({{ step.tasks.length }})</p>
+      <div class="flex gap-2">
+        <p class="step-title">{{ step.name }}</p>
+        <div class="flex w-6 h-6 bg-[rgba(255,255,255,0.2)] items-center justify-center rounded-full">
+          {{ step.tasks.length }}
+        </div>
+      </div>
       <button class="edit-step-name" (click)="onEditStep()">
         <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="edit"></mat-icon>
       </button>

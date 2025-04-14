@@ -26,7 +26,7 @@ main {
 }
 
 .project-name {
-  font-size: 20px;
+  font-size: 30px;
   font-weight: 600;
 }
 
@@ -40,12 +40,27 @@ main {
   color: white;
   border-bottom: 2px solid rgba(255, 255, 255, 0.2);
   padding-bottom: 10px;
+  padding: 50px 30px;
+  border-radius: 20px;
   margin-bottom: 30px;
+  background: rgb(89,84,221);
+  background: linear-gradient(90deg, rgba(89,84,221,1) 0%, rgba(29,64,188,1) 35%, rgba(92,89,186,1) 100%);
+}
+
+.title-and-description {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 }
 
 .container-project-title {
   display: flex;
-  gap: 10px;
+  gap: 20px;
+}
+
+.header-main {
+  background: rgb(2,0,36);
+  background: linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(9,9,121,1) 35%, rgba(0,212,255,1) 100%);
 }
 
 .container-steps {
@@ -97,10 +112,13 @@ main {
 }
 
 .edit-project-name {
-  background-color: transparent;
+  background-color: rgba(255, 255, 255, 0.178);
+  border-radius: 100%;
   border: none;
-  color: #7e8394;
+  color: #ffffff;
   cursor: pointer;
+  width: 40px;
+  height: 40px;
 }
 
 mat-icon{

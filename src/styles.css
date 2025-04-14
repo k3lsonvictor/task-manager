@@ -1,10 +1,13 @@
+@import "tailwindcss";
+
 :root {
   --primary-color: #333645;
   --secondary-color: #282A37;
 }
 
 *{
-  font-family: 'Courier New', Courier, monospace;
+  /* font-family: 'Courier New', Courier, monospace; */
+  font-family: "Inter", sans-serif;
   margin: 0px;
   box-sizing: border-box;
 }
