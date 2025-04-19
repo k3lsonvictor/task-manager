@@ -5,6 +5,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { StepService } from '../../api/services/step-service.service';
 import { ModalService } from '../../services/modals/modal.service';
 import { FormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
 
 export interface Step {
   name: string;
@@ -24,7 +25,7 @@ export interface Step {
 
 @Component({
   selector: 'app-step-collumn',
-  imports: [CardComponent, DragDropModule, MatIconModule, FormsModule],
+  imports: [CardComponent, DragDropModule, MatIconModule, FormsModule, CommonModule],
   templateUrl: './step-collumn.component.html',
   styleUrl: './step-collumn.component.css',
 })
@@ -38,6 +39,10 @@ export class StepCollumnComponent {
 
 
   constructor(private modalService: ModalService, private stepService: StepService) { }
+
+  trackByTaskId(index: number, card: any): any {
+    return card.id; // Substitua 'id' pelo campo único da sua tarefa
+  }
 
   ngOnInit() {
     this.setTitleStep = this.step.name;

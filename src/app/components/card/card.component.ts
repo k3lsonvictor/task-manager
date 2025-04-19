@@ -7,11 +7,12 @@ import { CommonModule } from '@angular/common';
 
 export interface Card {
   title: string;
-  tag: string | null;
+  tagId: string | null;
   limiteDate: string;
-  stepId: string;
+  stageId: string;
   id: string;
   description?: string;
+  position?: number;
 }
 
 export interface SimpleCard {

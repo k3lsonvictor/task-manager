@@ -34,9 +34,9 @@
     </div>
   </div>
   <div class="container-cards">
-    @for (card of step.tasks; track card) {
-    <app-card class="teste1" [card]="card" [cards]="cards" cdkDrag></app-card>
-    }
+    <ng-container *ngFor="let card of step.tasks; trackBy: trackByTaskId">
+      <app-card class="teste1" [card]="card" [cards]="cards" cdkDrag></app-card>
+    </ng-container>
   </div>
 </div>
 

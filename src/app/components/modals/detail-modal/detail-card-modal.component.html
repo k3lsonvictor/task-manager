@@ -1,9 +1,54 @@
 <app-base-modal modalType="detailModal">
-  <div class="modal-title">
-    {{selectedCard?.title}}
+  <div class="flex gap-10">
+    <div class="w-[70%]">
+      @if(!isEditingCardTitle) {
+        <div class="modal-title !text-[30px] !mb-[30px] !border !border-2 !border-solid !border-transparent !py-2 !h-[50px] flex items-center" (click)="onEditCardTitle()">
+          {{setTitleCard ? setTitleCard : selectedCard?.title}}
+        </div>
+      }
+      @if(isEditingCardTitle) {
+        <div class="modal-title !text-[30px] !mb-[30px]">
+            <input #titleInput class="!w-full !h-[50px] !bg-[#36383F] !rounded-[10px] !p-2 focus:!outline-none focus:!border-white focus:!border-2" [(ngModel)]="setTitleCard"/>
+          <!-- <button (click)="onConfirmEditCardTitle()">
+            <mat-icon>check</mat-icon>
+          </button>
+          <button (click)="onCancelEditCardTitle()">
+            <mat-icon>close</mat-icon>
+          </button> -->
+        </div>
+      }
+      <div class="continer-description !h-auto">
+        @if(!isEditingDescriptionCard) {
+          <label class="!text-[20px]" for="">Descrição</label>
+          <div class="area-description !h-[200px]" (click)="onEditDescriptionCard()">{{setDescriptionCard ? setDescriptionCard : selectedCard?.description }}</div>
+        }
+        @if(isEditingDescriptionCard) {
+          <label class="!text-[20px]" for="">Descrição</label>
+          <textarea #descriptionInput class="!w-full !h-[200px] !bg-[#36383F] !rounded-[10px] !p-2 focus:!outline-none focus:!border-white focus:!border-2 text-white" [(ngModel)]="setDescriptionCard"></textarea>
+        }
+      </div>
+    </div>
+    <div class="!mt-[10px] border-l-2 border-solid border-[#36383F] px-4 w-[30%]">
+      <label class="!text-[20px]" for="">Tags</label>
+      <div class="flex gap-2 flex-col !mt-6 gap-2">
+        @for (tag of tags; track tag.id){
+            <div 
+            [ngStyle]="{ 'background-color': tag.color, 'border': tag.id === selectedCard?.tagId ? '2px solid white' : 'none' }" 
+            class="rounded-sm px-2 py-1 text-md font-semibold mr-2 mb-2 text-white cursor-pointer"
+            >
+            {{ tag.name }}
+            </div>
+        }
+      </div>
+      <!-- <div class="bg-[#36383F] !w-max !rounded-[10px] !p-2 text-white flex items-center justify-center gap-1 cursor-pointer">
+        <div>
+          Adicionar tag
+        </div>
+        <mat-icon>add</mat-icon>
+      </div> -->
+    </div>
   </div>
-  <div class="continer-description">
-    <label for="">Descrição</label>
-    <div class="area-description">{{selectedCard?.description}}</div>
-  </div>
+  <!-- <app-button [customClass]="'!w-auto'">
+    Concluir
+  </app-button> -->
 </app-base-modal>

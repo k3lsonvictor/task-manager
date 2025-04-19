@@ -12,6 +12,7 @@ export class CardService {
   private selectedCardSource = new BehaviorSubject<Card | null>(null);
   selectedCard$ = this.selectedCardSource.asObservable();
 
+
   constructor(private apiService: ApiService) { }
 
   getCard(id: string): Observable<Card> {
@@ -20,18 +21,19 @@ export class CardService {
 
   selectCard(card: Card | null) {
     this.selectedCardSource.next(card);
+    console.log('🔵 Card selecionado:', card);
   }
 
-  createCard(title: string, tag: string = 'tag-exemplo', stepId: string, description?: string): Card {
+  createCard(title: string, tagId: string = 'tag-exemplo', stageId: string, description?: string): Card {
     return {
       title,
-      tag,
+      tagId,
       limiteDate: new Date().toLocaleDateString('pt-BR', {
         day: '2-digit',
         month: '2-digit',
         year: 'numeric',
       }),
-      stepId,
+      stageId,
       id: crypto.randomUUID(),
       description,
     };
@@ -60,6 +62,22 @@ export class CardService {
       taskId: cardId,
       position: newPosition // 🔥 Envia a posição correta para o backend
     });
+  }
+
+  updateCard(cardId: string, title: string, description: string, stageId: string | undefined | null, position: number | null | undefined ): Observable<any> {
+    console.log(stageId)
+    return this.apiService.patch(`tasks/${cardId}`, {
+      stageId,
+      position,
+      title,
+      description,
+    }).pipe(
+      switchMap(() => this.getCard(cardId)),
+      map((card: Card) => {
+        this.selectCard(card);
+        return card;
+      })
+    );
   }
   
 

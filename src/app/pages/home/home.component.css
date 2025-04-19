@@ -7,6 +7,20 @@ main {
   flex-direction: column;
 }
 
+.new-step {
+  animation: highlight 1s ease-out;
+  border: 2px solid #4caf50; /* Exemplo de destaque */
+}
+
+@keyframes highlight {
+  from {
+    background-color: #d4edda;
+  }
+  to {
+    background-color: transparent;
+  }
+}
+
 .welcome-title {
   color: white;
   font-weight: bolder;

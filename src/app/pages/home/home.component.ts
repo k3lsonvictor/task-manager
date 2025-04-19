@@ -15,6 +15,7 @@ import { Subscription } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { User, UserService } from '../../api/services/user.service';
 import { Tag, TagsService } from '../../api/services/tags.service';
+import { animate, state, style, transition, trigger } from '@angular/animations';
 
 @Component({
   selector: 'app-home',
@@ -28,7 +29,18 @@ import { Tag, TagsService } from '../../api/services/tags.service';
     CommonModule
   ],
   templateUrl: './home.component.html',
-  styleUrl: './home.component.css'
+  styleUrl: './home.component.css',
+  animations: [
+    trigger('stepAnimation', [
+      // Estado inicial (void) e final (*)
+      state('void', style({ opacity: 0, transform: 'translateY(-20px)' })),
+      state('*', style({ opacity: 1, transform: 'translateY(0)' })),
+      // Transição de void para o estado final
+      transition('void => *', [
+        animate('300ms ease-out') // Duração e curva de animação
+      ])
+    ])
+  ]
 })
 export class HomeComponent {
   project!: Project;
@@ -45,6 +57,12 @@ export class HomeComponent {
   isEditingProject: boolean = false;
 
   isCreatingProject: boolean = false;
+
+  newStepId: string | null = null; 
+
+  trackByStepId(index: number, step: any): any {
+    return step.id; // Substitua 'id' pelo campo único de cada step
+  }
 
   @Input() set creteProject(activate: boolean) {
     if (activate) {
@@ -157,13 +175,19 @@ export class HomeComponent {
 
   createStep() {
     this.stepService.createStep({ name: 'New Step', projectId: this.project.id }).subscribe({
-      next: () => {
+      next: (newStep) => {
+        this.newStepId = newStep.id; // Armazena o ID da nova etapa
         this.stepService.notifyStepUpdate();
         this.stepService.getSteps(this.project.id).subscribe(steps => {
           steps.forEach(s => {
-            s.tasks.sort((a, b) => a.position - b.position);  // Ordenação por position
+            s.tasks.sort((a, b) => a.position - b.position); // Ordenação por posição
           });
           this.steps = steps;
+  
+          // Limpa o estado após um pequeno atraso
+          setTimeout(() => {
+            this.newStepId = null;
+          }, 1000); // Tempo suficiente para a animação ser concluída
         });
       },
     });

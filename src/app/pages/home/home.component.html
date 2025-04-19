@@ -52,20 +52,20 @@
     Nova Etapa
   </app-button>
   <div class="container-steps !mt-4" cdkDropListGroup>
-    @for (step of steps; track step; let i = $index) {
-    <app-step-collumn
-      class="step-column"
-      [id]="'step-' + step.id"
-      [ngClass]="{ 'drag-over': activeStepId === step.id }"
-      (cdkDragEntered)="onDragEnter(step.id)"
-      (cdkDragExited)="onDragLeave()"
-      cdkDropList
-      [cdkDropListData]="step.tasks"
-      (cdkDropListDropped)="drop($event)"
-      [step]="step"
-    >
-    </app-step-collumn>
-    }
+    <ng-container *ngFor="let step of steps; trackBy: trackByStepId; let i = index">
+      <app-step-collumn
+        class="step-column"
+        [id]="'step-' + step.id"
+        [ngClass]="{ 'drag-over': activeStepId === step.id, 'new-step': step.id === newStepId }"
+        (cdkDragEntered)="onDragEnter(step.id)"
+        (cdkDragExited)="onDragLeave()"
+        cdkDropList
+        [cdkDropListData]="step.tasks"
+        (cdkDropListDropped)="drop($event)"
+        [step]="step"
+      >
+      </app-step-collumn>
+    </ng-container>
   </div>
   } @else {
   <div class="new-project">
