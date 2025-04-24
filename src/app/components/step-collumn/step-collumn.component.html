@@ -1,10 +1,10 @@
-<div class="container-step !bg-[rgba(65,65,65,0.2)]">
-  <div class="container-header-step">
+<div class="container-step !bg-[rgba(65,65,65,0.2)] !rounded-md">
+  <div class="container-header-step !text-sm">
     @if(!isEditing) {
     <div class="container-step-title">
-      <div class="flex gap-2">
+      <div class="flex gap-2 items-center">
         <p class="step-title">{{ step.name }}</p>
-        <div class="flex w-6 h-6 bg-[rgba(255,255,255,0.2)] items-center justify-center rounded-full">
+        <div class="flex w-6 h-6 bg-[rgba(255,255,255,0.2)] items-center justify-center rounded-full !text-sm">
           {{ step.tasks.length }}
         </div>
       </div>
@@ -14,15 +14,15 @@
     </div>
     }
     @if(isEditing) {
-      <div class="container-edit-step-title">
-        <input class="edit-step-title" [(ngModel)]="setTitleStep"/>
-        <button class="confirm-step-name" (click)="onConfirmEditStep()">
-          <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="check"></mat-icon>
-        </button>
-        <button class="confirm-step-name" (click)="onCancelEditStep()">
-          <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="close"></mat-icon>
-        </button>
-      </div>
+    <div class="container-edit-step-title">
+      <input class="edit-step-title" [(ngModel)]="setTitleStep" />
+      <button class="confirm-step-name" (click)="onConfirmEditStep()">
+        <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="check"></mat-icon>
+      </button>
+      <button class="confirm-step-name" (click)="onCancelEditStep()">
+        <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="close"></mat-icon>
+      </button>
+    </div>
     }
     <div class="container-buttons">
       <button class="add-task" (click)="onCreateStep()">

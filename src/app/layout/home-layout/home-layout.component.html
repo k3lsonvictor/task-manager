@@ -3,17 +3,18 @@
     <aside>
       <div class="projects-header !gap-10">
         <img src="imagem.png" alt="" class="w-auto h-auto display-block" />
-        <div class="flex gap-2">
+        <div class="flex gap-2 items-center">
           <mat-icon fontIcon="view_timeline" class="!text-[30px] font-normal"></mat-icon>
-          <h3 class="font-normal text-[18px]">Projetos</h3>
+          <h3 class="font-normal text-md">Projetos</h3>
         </div>
       </div>
       <div class="sidebar w-full">
         <div class="projects !mt-4">
           @for (project of projects; track project.id) {
-          <div class="container-select-project bg-[#3A3B4E] flex !justify-between !px-4 !items-center rounded-md !border-none !py-4 !w-full">
+          <div
+            class="container-select-project bg-[#3A3B4E] flex !justify-between !px-3 !items-center !rounded-sm !border-none !py-2 !w-full">
             <a [routerLink]="['/tasks', project.id]">
-              <div class="project-title">{{ project.name }}</div>
+              <div class="text-sm">{{ project.name }}</div>
             </a>
             <button class="delete-project" (click)="onDeleteProject(project.id)">
               <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="delete"></mat-icon>
