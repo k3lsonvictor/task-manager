@@ -18,7 +18,9 @@
       <label class="text-md" for="">Tags</label>
       <div class="flex flex-col !mt-6 gap-2">
         @for (tag of tags; track tag.id){
-        <div [ngStyle]="{ 'background-color': tag.color}" (click)="null"
+        <div
+          [ngStyle]="{ 'background-color': tag.color, 'border': tag.id === selectedTag?.id ? '2px solid white' : 'none'}"
+          (click)="onSelectedTag(tag)"
           class="rounded-sm px-2 py-1 text-md font-normal mr-2 mb-2 text-white cursor-pointer">
           {{ tag.name }}
         </div>
