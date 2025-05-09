@@ -25,20 +25,50 @@
               @for (tag of tags; track tag.id){
                 <div 
                   [ngStyle]="{ 'background-color': tag.color }" 
-                  class="rounded-full px-2 py-1 text-xs font-semibold mr-2 mb-2"
+                  class="rounded-full px-2 py-1 text-xs font-semibold mr-2 mb-2 flex items-center justify-center"
                 >
                   {{ tag.name }}
                 </div>
               }
             </div>
-            <div>
-              <button class="add-tag">
+            <div class="flex justify-center items-center">
+              <button 
+                #addTagButton
+                class="add-tag cursor-pointer hover:bg-[#5252D9] rounded-full p-1"
+                (click)="onCreateTag()"
+              >
                 <mat-icon
                   aria-hidden="false"
                   aria-label="Example home icon"
                   fontIcon="add"
                 ></mat-icon>
               </button>
+            </div>
+            <div 
+              *ngIf="createNewTag" 
+              class="create-tag-modal absolute bg-[#25262C] shadow-lg rounded-md p-4 border-solid border-1 border-[#36383F] flex flex-col gap-6"
+              [ngStyle]="{ top: modalPosition.top + 'px', left: modalPosition.left + 'px' }"
+            >
+              <div class="flex gap-2">
+                <div class="flex items-center gap-2">
+                  <label for="tagName" >Nome da Tag:</label>
+                  <input id="tagName" type="text" class="input-field" class="bg-[#36383F] text-black rounded-md"/>
+                </div>
+  
+                <div class="flex gap-2 items-center">
+                  <label for="tagColor">Cor da Tag:</label>
+                  <input id="tagColor" type="color"/>
+                </div>
+              </div>
+
+              <div class="modal-actions flex gap-2 mt-4">
+                <app-button (click)="createStep()" [customClass]="'!w-auto'">
+                  Cancelar
+                </app-button>
+                <app-button (click)="createStep()" [customClass]="'!w-auto'">
+                  Salvar
+                </app-button>
+              </div>
             </div>
           </div> 
         </div>

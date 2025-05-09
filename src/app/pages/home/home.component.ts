@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, Input } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, Input, ViewChild } from '@angular/core';
 import { Step, StepCollumnComponent } from '../../components/step-collumn/step-collumn.component';
 import { CdkDragDrop, DragDropModule, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { ButtonComponent } from '../../components/button/button.component';
@@ -60,6 +60,25 @@ export class HomeComponent {
 
   newStepId: string | null = null; 
 
+  createNewTag: boolean = false;
+
+  modalPosition = { top: 0, left: 0 };
+
+  onCreateTag() {
+    this.createNewTag = !this.createNewTag;
+
+    if (this.createNewTag) {
+      // Calcula a posição do botão
+      const buttonRect = this.addTagButton.nativeElement.getBoundingClientRect();
+      this.modalPosition = {
+        top: buttonRect.bottom + window.scrollY, // Posição abaixo do botão
+        left: buttonRect.left + window.scrollX // Alinha à esquerda do botão
+      };
+    }
+  }
+
+  @ViewChild('addTagButton', { static: false }) addTagButton!: ElementRef;
+
   trackByStepId(index: number, step: any): any {
     return step.id; // Substitua 'id' pelo campo único de cada step
   }
@@ -119,6 +138,7 @@ export class HomeComponent {
     this.isCreatingProject = true;
     this.modalService.openModal("createProjectModal")
   }
+
 
   ngOnInit() {
     const userId = localStorage.getItem('userId');
