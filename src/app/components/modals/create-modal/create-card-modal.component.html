@@ -1,27 +1,47 @@
 <app-base-modal (closed)="closeModal()">
-  <div class="modal-title">
-    <label for="">Título</label>
-    <input class="input-title" type="text" [formControl]="title">
-    <!-- <app-input label="título"></app-input> -->
+  <div class="flex gap-10 pb-10">
+    <div class="w-[70%]">
+      <div class="modal-title">
+        <label for="">Título</label>
+        <input #titleInput
+          class="text-white text-sm font-light py-2 bg-gray-700 border-2-gray-400 flex items-center rounded-md px-2 focus:!outline-none "
+          [formControl]="title" />
+        <!-- <app-input label=" título"></app-input> -->
+      </div>
+      <div class="continer-description">
+        <label for="">Descrição</label>
+        <textarea #descriptionInput [formControl]="description"
+          class="w-full h-[100px] text-sm bg-gray-700 rounded-md !p-2 focus:!outline-none text-white resize-none"></textarea>
+      </div>
+    </div>
+    <div class="!mt-[10px] border-l-2 border-solid border-[#36383F] px-4 w-[30%]">
+      <label class="text-md" for="">Tags</label>
+      <div class="flex flex-col !mt-6 gap-2">
+        @for (tag of tags; track tag.id){
+        <div [ngStyle]="{ 'background-color': tag.color}" (click)="null"
+          class="rounded-sm px-2 py-1 text-md font-normal mr-2 mb-2 text-white cursor-pointer">
+          {{ tag.name }}
+        </div>
+        }
+      </div>
+    </div>
   </div>
-  <div class="continer-description">
-    <label for="">Descrição</label>
-    <textarea class="area-description" [formControl]="description"></textarea>
-  </div>
+
   <!-- <div>Aqui {{step.id}}</div> -->
   @if(!project){
-  <!-- <button (click)="createCard()">
-    Criar
-  </button> -->
   @if(modalType === "createModal"){
-    <button (click)="createCard()">
+  <div class="flex justify-center">
+    <button (click)="createCard()"
+      class="rounded-md cursor-pointer text-white bg-[#5252D9] hover:bg-[#3f3fb9] flex w-min h-auto py-1 px-6 ">
       Criar
     </button>
+  </div>
+
   }
   @if(typeModal){
-    <button (click)="onCreateProject()">
-      Criar
-    </button>
+  <button (click)="onCreateProject()">
+    Criar
+  </button>
   }
   }
   @if(project && modalType === "editProjectModal"){

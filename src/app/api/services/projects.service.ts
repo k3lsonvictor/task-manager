@@ -24,7 +24,7 @@ export class ProjectsService {
   private selectedProjectSource = new BehaviorSubject<string | null>(null);
   selectedProject$ = this.selectedProjectSource.asObservable();
 
-  constructor(private apiService: ApiService) {}
+  constructor(private apiService: ApiService) { }
 
   triggerCreateProject() {
     this.createProjectSubject.next();
@@ -53,7 +53,7 @@ export class ProjectsService {
   createProject(name: string, description: string): Observable<any> {
     return this.apiService.post('projects', { name, description });
   }
-  
+
   editProject(name: string, description: string, id: string): Observable<any> {
     return this.apiService.patch(`projects/${id}`, { name, description });
   }

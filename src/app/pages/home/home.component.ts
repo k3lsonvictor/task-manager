@@ -16,6 +16,7 @@ import { CommonModule } from '@angular/common';
 import { User, UserService } from '../../api/services/user.service';
 import { Tag, TagsService } from '../../api/services/tags.service';
 import { animate, state, style, transition, trigger } from '@angular/animations';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-home',
@@ -26,7 +27,8 @@ import { animate, state, style, transition, trigger } from '@angular/animations'
     CreateModalComponent,
     DetailCardModalComponent,
     MatIconModule,
-    CommonModule
+    CommonModule,
+    ReactiveFormsModule
   ],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css',
@@ -58,11 +60,16 @@ export class HomeComponent {
 
   isCreatingProject: boolean = false;
 
-  newStepId: string | null = null; 
+  newStepId: string | null = null;
 
   createNewTag: boolean = false;
 
   modalPosition = { top: 0, left: 0 };
+
+  tagName = new FormControl<string>('');
+  tagColor = new FormControl<string>('');
+
+  tagShowDelete: string = ""
 
   onCreateTag() {
     this.createNewTag = !this.createNewTag;
@@ -101,6 +108,31 @@ export class HomeComponent {
     console.log("Saiu do step");
     this.activeStepId = null;
     this.cdr.detectChanges();
+  }
+
+  createTag() {
+    this.tagsService.createTag(this.tagName.value!, this.tagColor.value!, this.project.id).subscribe({
+      next: (newTag) => {
+        console.log('Tag criada:', newTag);
+        this.tags.push(newTag); // Adiciona a nova tag à lista
+        this.createNewTag = false; // Fecha o modal de criação de tag
+      },
+      error: (error) => {
+        console.error('Erro ao criar tag:', error);
+      }
+    });
+  }
+
+  deleteTag(tagId: string) {
+    this.tagsService.deleteTag(tagId).subscribe({
+      next: () => {
+        console.log('Tag deletada:', tagId);
+        this.tags = this.tags.filter(tag => tag.id !== tagId); // Remove a tag da lista
+      },
+      error: (error) => {
+        console.error('Erro ao deletar tag:', error);
+      }
+    });
   }
 
   constructor(
@@ -203,7 +235,7 @@ export class HomeComponent {
             s.tasks.sort((a, b) => a.position - b.position); // Ordenação por posição
           });
           this.steps = steps;
-  
+
           // Limpa o estado após um pequeno atraso
           setTimeout(() => {
             this.newStepId = null;

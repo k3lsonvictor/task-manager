@@ -24,7 +24,7 @@ export class CardService {
     console.log('🔵 Card selecionado:', card);
   }
 
-  createCard(title: string, tagId: string = 'tag-exemplo', stageId: string, description?: string): Card {
+  createCard(title: string, tagId: string | null, stageId: string, description?: string): Card {
     return {
       title,
       tagId,
@@ -41,11 +41,12 @@ export class CardService {
 
   addCard(card: Card, stepId: string): Observable<any> {
     console.log('🔴 addCard foi chamado?');
-  
+
     return this.apiService.post(`tasks`, {
       title: card.title,
       description: card.description,
-      stageId: stepId
+      stageId: stepId,
+      tagId: card.tagId,
     }).pipe(
       map(response => {
         console.log('✅ Task criada:', response);
@@ -54,7 +55,7 @@ export class CardService {
       })
     );
   }
-  
+
 
   updateStepCard(cardId: string, newStepId: string, newPosition: number): Observable<any> {
     return this.apiService.patch(`tasks/${cardId}`, {
@@ -64,14 +65,8 @@ export class CardService {
     });
   }
 
-  updateCard(cardId: string, title: string, description: string, stageId: string | undefined | null, position: number | null | undefined ): Observable<any> {
-    console.log(stageId)
-    return this.apiService.patch(`tasks/${cardId}`, {
-      stageId,
-      position,
-      title,
-      description,
-    }).pipe(
+  updateCard(cardId: string, updates: Partial<{ title: string; description: string; stageId: string; position: number; tagId: string | null }>): Observable<any> {
+    return this.apiService.patch(`tasks/${cardId}`, updates).pipe(
       switchMap(() => this.getCard(cardId)),
       map((card: Card) => {
         this.selectCard(card);
@@ -79,7 +74,7 @@ export class CardService {
       })
     );
   }
-  
+
 
   removeCard(id: string): Observable<any> {
     return this.apiService.delete(`tasks/${id}`);

@@ -24,4 +24,16 @@ export class TagsService {
     return this.apiService.get(`tags/${id}`);
   }
 
+  createTag(name: string, color: string, projectId: string): Observable<Tag> {
+    return this.apiService.post(`tags`, {
+      name,
+      color,
+      projectId
+    });
+  }
+
+  deleteTag(id: string): Observable<void> {
+    return this.apiService.delete(`tags/${id}`);
+  }
+
 }
