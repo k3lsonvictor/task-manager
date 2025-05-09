@@ -1,6 +1,6 @@
-<div class="card" [ngStyle]="{ 'background-color': card.tag?.color }" (click)="openDetailCardModal()">
+<div class="card !rounded-md" [ngStyle]="{ 'background-color': card.tag?.color }" (click)="openDetailCardModal()">
   <div class="card-header">
-    <p class="title">{{card.title}}</p>
+    <p class="title !text-sm font-normal">{{card.title}}</p>
     <button class="delete-card" (click)="deleteStep($event)">
       <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="delete"></mat-icon>
     </button>

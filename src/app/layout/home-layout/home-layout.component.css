@@ -51,16 +51,12 @@ mat-icon{
   margin-top: 50px;
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 10px;
 }
 
 a {
   text-decoration: none; /* Remove o sublinhado */
   color: inherit; /* Mantém a cor do texto padrão */
-}
-
-.project-title {
-  font-size: 18px;
 }
 
 .projects-header {

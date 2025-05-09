@@ -1,7 +1,8 @@
 <main>
-  <div class="container-modal !w-[60%] !h-auto !px-16 !py-12 !flex !flex-col justify-between">
+  <div class="container-modal !w-[60%] !h-auto !px-16 !py-12 !flex !flex-col justify-between rounded-lg">
     <ng-content></ng-content>
-    <button (click)="onCloseModal()" class="close-modal bg-[#36383F] !w-[50px] !h-[50px] !rounded-full flex items-center justify-center">
+    <button (click)="onCloseModal()"
+      class="close-modal bg-[#36383F] !w-[50px] !h-[50px] !rounded-full flex items-center justify-center">
       <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="close" class="!text-white"></mat-icon>
     </button>
   </div>
