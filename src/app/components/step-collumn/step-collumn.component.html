@@ -1,4 +1,4 @@
-<div class="container-step !bg-[rgba(111,111,111,0.2)] !rounded-md">
+<div class="container-step !bg-[rgba(111,111,111,0.2)] !rounded-md" [ngClass]="{'deleting': isDeleting}">
   <div class="container-header-step !text-sm">
     @if(!isEditing) {
     <div class="container-step-title">

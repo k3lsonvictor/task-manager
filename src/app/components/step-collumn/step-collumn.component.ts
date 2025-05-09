@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { finalize } from 'rxjs/operators';
 import { Card, CardComponent } from '../card/card.component';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { MatIconModule } from '@angular/material/icon';
@@ -37,6 +38,8 @@ export class StepCollumnComponent {
 
   isEditing: boolean = false;
 
+  isDeleting: boolean = false;
+
 
   constructor(private modalService: ModalService, private stepService: StepService) { }
 
@@ -55,10 +58,20 @@ export class StepCollumnComponent {
   }
 
   onDeleteStep() {
-    this.stepService.deleteStep(this.step.id).subscribe({
+    this.isDeleting = true;
+    this.stepService.deleteStep(this.step.id).pipe(
+      finalize(() => {
+        this.isDeleting = false;
+      })
+    ).subscribe({
       next: () => {
+        // Notifica a atualização e busca os steps atualizados
         this.stepService.notifyStepUpdate();
-        this.stepService.getSteps(this.step.projectId);
+        this.stepService.getSteps(this.step.projectId).subscribe({
+          next: (steps) => {
+            console.log('Steps atualizados:', steps);
+          }
+        });
       }
     })
   }
