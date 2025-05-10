@@ -147,7 +147,7 @@ export class HomeComponent {
   ) {
     this.modalService.modalsState$.subscribe(state => {
       this.detailCardModalIsOpen = state["detailModal"] || false;
-      this.createCardModalIsOpen = state["createModal"] || false;
+      this.createCardModalIsOpen = state["createCardModal"] || false;
       this.isEditingProject = state["editProjectModal"] || false;
       this.isCreatingProject = state["createProjectModal"] || false;
     })
@@ -184,7 +184,7 @@ export class HomeComponent {
 
     this.route.paramMap.subscribe(params => {
       const projectId = params.get('projectId');
-      if (projectId) {
+      if (projectId && projectId !== this.project?.id) { // Verifica se o projectId mudou
         console.log('Mudou para o projeto:', projectId);
 
         this.projectsService.getProject(projectId).subscribe(project => {

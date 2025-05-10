@@ -1,6 +1,6 @@
 <app-base-modal (closed)="closeModal()">
   <div class="flex gap-10 pb-10">
-    <div class="w-[70%]">
+    <div [ngClass]="modalType === 'createCardModal' ? 'w-[70%]' : 'w-[100%]'">
       <div class="modal-title">
         <label for="">Título</label>
         <input #titleInput
@@ -14,6 +14,7 @@
           class="w-full h-[100px] text-sm bg-gray-700 rounded-md !p-2 focus:!outline-none text-white resize-none"></textarea>
       </div>
     </div>
+    @if (modalType === "createCardModal") {
     <div class="!mt-[10px] border-l-2 border-solid border-[#36383F] px-4 w-[30%]">
       <label class="text-md" for="">Tags</label>
       <div class="flex flex-col !mt-6 gap-2">
@@ -27,11 +28,13 @@
         }
       </div>
     </div>
+    }
+
   </div>
 
   <!-- <div>Aqui {{step.id}}</div> -->
   @if(!project){
-  @if(modalType === "createModal"){
+  @if(modalType === "createCardModal"){
   <div class="flex justify-center">
     <button (click)="createCard()"
       class="rounded-md cursor-pointer text-white bg-[#5252D9] hover:bg-[#3f3fb9] flex w-min h-auto py-1 px-6 ">
@@ -41,9 +44,12 @@
 
   }
   @if(typeModal){
-  <button (click)="onCreateProject()">
-    Criar
-  </button>
+  <div class="flex justify-center">
+    <button (click)="onCreateProject()"
+      class="rounded-md cursor-pointer text-white bg-[#5252D9] hover:bg-[#3f3fb9] flex w-min h-auto py-1 px-6 ">
+      Criar
+    </button>
+  </div>
   }
   }
   @if(project && modalType === "editProjectModal"){

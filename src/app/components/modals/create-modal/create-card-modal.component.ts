@@ -92,7 +92,7 @@ export class CreateModalComponent {
   createCard() {
     console.log('🟡 createCard() foi chamado!');
 
-    if (this.modalType !== 'createModal' || !this.selStep) return;
+    if (this.modalType !== 'createCardModal' || !this.selStep) return;
 
     const newCard = this.cardService.createCard(
       this.title.value!,
@@ -110,7 +110,7 @@ export class CreateModalComponent {
         }
 
         this.resetForm();
-        this.modalService.closeModal('createModal');
+        this.modalService.closeModal('createCardModal');
       },
       error: err => console.error('❌ Erro ao criar card:', err),
     });

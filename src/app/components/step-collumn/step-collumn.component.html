@@ -34,9 +34,15 @@
     </div>
   </div>
   <div class="container-cards">
-    <ng-container *ngFor="let card of step.tasks; trackBy: trackByTaskId">
-      <app-card class="teste1" [card]="card" [cards]="cards" cdkDrag></app-card>
+    <ng-container *ngIf="isLoading; else cardsContent">
+      <div class="h-24 bg-gray-600 rounded-sm animate-pulse mb-4" *ngFor="let _ of [1, 2, 3, 4]"></div>
     </ng-container>
+
+    <ng-template #cardsContent>
+      <ng-container *ngFor="let card of step.tasks; trackBy: trackByTaskId">
+        <app-card class="teste1" [card]="card" [cards]="cards" cdkDrag></app-card>
+      </ng-container>
+    </ng-template>
   </div>
 </div>
 

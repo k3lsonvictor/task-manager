@@ -12,6 +12,9 @@ export class CardService {
   private selectedCardSource = new BehaviorSubject<Card | null>(null);
   selectedCard$ = this.selectedCardSource.asObservable();
 
+  private updatedCardSource = new BehaviorSubject<Card | string | null>(null);
+  updatedCard$ = this.updatedCardSource.asObservable();
+
 
   constructor(private apiService: ApiService) { }
 
@@ -64,12 +67,19 @@ export class CardService {
       position: newPosition // 🔥 Envia a posição correta para o backend
     });
   }
-
   updateCard(cardId: string, updates: Partial<{ title: string; description: string; stageId: string; position: number; tagId: string | null }>): Observable<any> {
+    // Emit a signal to indicate the update process has started (e.g., for loading state)
+    this.updatedCardSource.next(updates.stageId ?? null);
+
+    const updatedCard = { ...this.selectedCardSource.value, ...updates } as Card;
+    this.selectCard(updatedCard);
+
     return this.apiService.patch(`tasks/${cardId}`, updates).pipe(
       switchMap(() => this.getCard(cardId)),
       map((card: Card) => {
+        // Emit the updated card to indicate the update process is complete
         this.selectCard(card);
+        this.updatedCardSource.next(card);
         return card;
       })
     );

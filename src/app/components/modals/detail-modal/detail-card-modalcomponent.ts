@@ -11,7 +11,7 @@ import { ProjectsService } from '../../../api/services/projects.service';
 import { CommonModule } from '@angular/common';
 import { StepService } from '../../../api/services/step-service.service';
 
-type SimpleCard = Omit<Card, 'stageId' | 'position' | "limiteDate">;
+type SimpleCard = Omit<Card, 'position' | "limiteDate">;
 
 @Component({
   selector: 'app-detail-card-modal',
@@ -91,6 +91,7 @@ export class DetailCardModalComponent {
         this.selectedCard.tagId = "";
         this.cardService.updateCard(this.selectedCard.id, {
           tagId: null,
+          stageId: this.selectedCard.stageId
         }).subscribe({
           next: () => {
             this.cardService.getCard(this.selectedCard!.id).subscribe(card => {
@@ -104,6 +105,7 @@ export class DetailCardModalComponent {
       this.selectedCard.tagId = tag.id;
       this.cardService.updateCard(this.selectedCard.id, {
         tagId: tag.id,
+        stageId: this.selectedCard.stageId
       }).subscribe({
         next: () => {
           this.cardService.getCard(this.selectedCard!.id).subscribe(card => {
@@ -128,6 +130,8 @@ export class DetailCardModalComponent {
         this.isEditingCardTitle = false;
         this.cardService.updateCard(this.selectedCard.id, {
           title: this.setTitleCard,
+          tagId: this.selectedCard?.tagId,
+          stageId: this.selectedCard?.stageId,
         }).subscribe({
           next: () => {
             this.cardService.getCard(this.selectedCard!.id).subscribe(card => {
@@ -145,7 +149,9 @@ export class DetailCardModalComponent {
       if (!clickedInsideDescription && this.isEditingDescriptionCard) {
         this.isEditingDescriptionCard = false;
         this.cardService.updateCard(this.selectedCard!.id, {
-          description: this.setDescriptionCard
+          description: this.setDescriptionCard,
+          tagId: this.selectedCard?.tagId,
+          stageId: this.selectedCard?.stageId,
         }).subscribe({
           next: () => {
             this.cardService.getCard(this.selectedCard!.id).subscribe(card => {
