@@ -23,6 +23,7 @@ export interface Step {
     } | null;
   }[];
   projectId: string;
+  createdAt?: string;
 }
 
 @Component({
@@ -82,9 +83,7 @@ export class StepCollumnComponent {
     this.isLoading = true;
     if (this.step) {
       this.setTitleStep = this.step.name;
-      if (this.step.tasks.length > 0) {
-        this.isLoading = false;
-      }
+      this.isLoading = false;
     }
   }
 
@@ -95,19 +94,9 @@ export class StepCollumnComponent {
 
   onDeleteStep() {
     this.isDeleting = true;
-    this.stepService.deleteStep(this.step.id).pipe(
-      finalize(() => {
-        this.isDeleting = false;
-      })
-    ).subscribe({
+    this.stepService.deleteStep(this.step.id).subscribe({
       next: () => {
-        // Notifica a atualização e busca os steps atualizados
         this.stepService.notifyStepUpdate();
-        this.stepService.getSteps(this.step.projectId).subscribe({
-          next: (steps) => {
-            console.log('Steps atualizados:', steps);
-          }
-        });
       }
     })
   }

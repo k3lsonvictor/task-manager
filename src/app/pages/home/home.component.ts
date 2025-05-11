@@ -98,6 +98,10 @@ export class HomeComponent {
 
   activeStepId: string | null = null;
 
+  private sortStepsByCreatedAt(steps: Step[]): Step[] {
+    return steps.sort((a, b) => new Date(a.createdAt || 0).getTime() - new Date(b.createdAt || 0).getTime());
+  }
+
   onDragEnter(stepId: string) {
     console.log("Entrou no step:", stepId);
     this.activeStepId = stepId;
@@ -128,6 +132,7 @@ export class HomeComponent {
       next: () => {
         console.log('Tag deletada:', tagId);
         this.tags = this.tags.filter(tag => tag.id !== tagId); // Remove a tag da lista
+        this.stepService.notifyStepUpdate();
       },
       error: (error) => {
         console.error('Erro ao deletar tag:', error);
@@ -171,7 +176,6 @@ export class HomeComponent {
     this.modalService.openModal("createProjectModal")
   }
 
-
   ngOnInit() {
     const userId = localStorage.getItem('userId');
 
@@ -192,13 +196,8 @@ export class HomeComponent {
 
           this.projectsService.setProject(project);
 
-          this.stepService.getSteps(project.id).subscribe(step => {
-            console.log(step);
-            // Ordena as tasks por position antes de armazenar em steps
-            step.forEach(s => {
-              s.tasks.sort((a, b) => a.position - b.position);  // Ordenação por position
-            });
-            this.steps = step;
+          this.stepService.getSteps(project.id).subscribe(steps => {
+            this.steps = this.sortStepsByCreatedAt(steps);
           });
 
           this.tagsService.getTags(project.id).subscribe(tags => {
@@ -211,10 +210,8 @@ export class HomeComponent {
 
     this.stepService.stepUpdated$.subscribe(() => {
       this.stepService.getSteps(this.project.id).subscribe(steps => {
-        steps.forEach(s => {
-          s.tasks.sort((a, b) => a.position - b.position);  // Ordenação por position
-        });
-        this.steps = steps;
+        this.steps = this.sortStepsByCreatedAt(steps);
+        this.cdr.detectChanges(); // Força a atualização do Angular});
       });
     });
 
@@ -226,24 +223,34 @@ export class HomeComponent {
   }
 
   createStep() {
-    this.stepService.createStep({ name: 'New Step', projectId: this.project.id }).subscribe({
-      next: (newStep) => {
-        this.newStepId = newStep.id; // Armazena o ID da nova etapa
-        this.stepService.notifyStepUpdate();
-        this.stepService.getSteps(this.project.id).subscribe(steps => {
-          steps.forEach(s => {
-            s.tasks.sort((a, b) => a.position - b.position); // Ordenação por posição
-          });
-          this.steps = steps;
 
-          // Limpa o estado após um pequeno atraso
-          setTimeout(() => {
-            this.newStepId = null;
-          }, 1000); // Tempo suficiente para a animação ser concluída
-        });
+    const tempStepId = 'temp-' + Date.now();
+    const tempStep = {
+      id: tempStepId,
+      name: 'Nova Etapa',
+      tasks: [],
+      createdAt: new Date().toISOString(),
+      projectId: this.project.id,
+    };
+
+    // Adiciona a etapa temporária à lista de etapas
+    this.steps = [...this.steps, tempStep];
+    this.newStepId = tempStepId; // Define o ID para ativar a animação
+
+    // Envia a requisição para criar a etapa no backend
+    this.stepService.createStep({ name: 'Nova Etapa', projectId: this.project.id }).subscribe({
+      next: (newStep) => {
+        this.stepService.notifyStepUpdate();
+
+      },
+      error: () => {
+        // Remove a etapa temporária em caso de erro
+        this.steps = this.steps.filter((step) => step.id !== tempStepId);
+        // this.newStepId = null;
       },
     });
   }
+
 
   drop(event: CdkDragDrop<SimpleCard[]>) {
     const previousStepId = this.extractStepId(event.previousContainer.id);

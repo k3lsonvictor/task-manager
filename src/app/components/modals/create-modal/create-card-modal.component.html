@@ -53,8 +53,11 @@
   }
   }
   @if(project && modalType === "editProjectModal"){
-  <button (click)="editProjectModal()">
-    Concluir
-  </button>
+  <div class="flex justify-center">
+    <button (click)="editProjectModal()"
+      class="rounded-md cursor-pointer text-white bg-[#5252D9] hover:bg-[#3f3fb9] flex w-min h-auto py-1 px-6 ">
+      Concluir
+    </button>
+  </div>
   }
 </app-base-modal>

@@ -31,7 +31,7 @@
     </div>
     <div class="!mt-[10px] border-l-2 border-solid border-[#36383F] px-4 w-[30%]">
       <label class="text-md" for="">Tags</label>
-      <div class="flex flex-col !mt-6 gap-2">
+      <div class="flex flex-col !mt-6 gap-2" *ngIf="tags && tags.length > 0">
         @for (tag of tags; track tag.id){
         <div (click)="onEditTagCard(tag)"
           [ngStyle]="{ 'background-color': tag.color, 'border': tag.id === selectedCard?.tagId ? '2px solid white' : 'none' }"
@@ -39,6 +39,39 @@
           {{ tag.name }}
         </div>
         }
+      </div>
+      <div class="flex flex-col !mt-6 gap-2" *ngIf="!tags || tags.length === 0">
+        <div class="rounded-sm px-2 py-1 text-md font-normal mr-2 mb-2 text-white cursor-pointer flex-col gap-2">
+          Nenhuma tag
+          <button (click)="onCreateTag()"
+            class="rounded-md cursor-pointer text-white bg-[#5252D9] hover:bg-[#3f3fb9] flex w-auto h-auto py-1 px-6 ">
+            Criar Tag
+          </button>
+        </div>
+        <div class="bg-[#25262C] shadow-lg rounded-md p-4 border-solid border-1 border-[#36383F] flex flex-col gap-6"
+          *ngIf="createNewTag">
+          <div class="flex flex-col gap-2">
+            <div class="flex flex-col items-start gap-2">
+              <label for="tagName">Nome da Tag:</label>
+              <input id="tagName" type="text" class="input-field"
+                class="bg-gray-700 rounded-sm px-1 text-white font-light" />
+            </div>
+
+            <div class="flex gap-2 items-center">
+              <label for="tagColor">Cor da Tag:</label>
+              <input id="tagColor" type="color" />
+            </div>
+          </div>
+
+          <div class="modal-actions flex gap-2 mt-4">
+            <app-button (click)="onCreateTag()" [customClass]="'!w-auto'" [formControl]="tagName">
+              Cancelar
+            </app-button>
+            <app-button (click)="createTag()" [customClass]="'!w-auto'">
+              Salvar
+            </app-button>
+          </div>
+        </div>
       </div>
     </div>
   </div>

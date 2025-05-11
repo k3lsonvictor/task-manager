@@ -4,7 +4,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { Card } from '../../card/card.component';
 import { BaseModalComponent } from '../base-modal/base-modal.component';
 import { CardService } from '../../../api/services/card.service';
-import { FormsModule } from '@angular/forms';
+import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ButtonComponent } from '../../button/button.component';
 import { Tag, TagsService } from '../../../api/services/tags.service';
 import { ProjectsService } from '../../../api/services/projects.service';
@@ -15,7 +15,7 @@ type SimpleCard = Omit<Card, 'position' | "limiteDate">;
 
 @Component({
   selector: 'app-detail-card-modal',
-  imports: [BaseModalComponent, MatIconModule, FormsModule, CommonModule],
+  imports: [BaseModalComponent, MatIconModule, FormsModule, CommonModule, ReactiveFormsModule, ButtonComponent],
   templateUrl: './detail-card-modal.component.html',
   styleUrl: './detail-card-modal.component.css'
 })
@@ -31,6 +31,11 @@ export class DetailCardModalComponent {
   isEditingDescriptionCard: boolean = false;
 
   tags: Tag[] = [];
+
+  createNewTag: boolean = false;
+
+  tagName = new FormControl<string>('');
+  tagColor = new FormControl<string>('');
 
 
   constructor(
@@ -58,6 +63,23 @@ export class DetailCardModalComponent {
     } else {
       console.error('ID do projeto não encontrado na URL');
     }
+  }
+
+  onCreateTag() {
+    this.createNewTag = !this.createNewTag;
+  }
+
+  createTag() {
+    this.tagsService.createTag(this.tagName.value!, this.tagColor.value!, this.currentProjectId).subscribe({
+      next: (newTag) => {
+        console.log('Tag criada:', newTag);
+        this.tags.push(newTag); // Adiciona a nova tag à lista
+        this.createNewTag = false; // Fecha o modal de criação de tag
+      },
+      error: (error) => {
+        console.error('Erro ao criar tag:', error);
+      }
+    });
   }
 
   ngOnInit() {

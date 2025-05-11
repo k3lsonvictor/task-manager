@@ -8,16 +8,19 @@ main {
 }
 
 .new-step {
-  animation: highlight 1s ease-out;
-  border: 2px solid #4caf50; /* Exemplo de destaque */
+/* Adiciona uma animação de piscar */
+  animation: blinking 1s infinite; /* Loop infinito */
 }
 
-@keyframes highlight {
-  from {
-    background-color: #d4edda;
+@keyframes blinking {
+  0% {
+    background-color: rgba(82, 82, 217, 0.3); /* Cor inicial */
   }
-  to {
-    background-color: transparent;
+  50% {
+    background-color: rgba(82, 82, 217, 0.1); /* Cor intermediária */
+  }
+  100% {
+    background-color: rgba(82, 82, 217, 0.3); /* Cor final */
   }
 }
 

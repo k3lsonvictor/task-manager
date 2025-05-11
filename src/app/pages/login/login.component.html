@@ -1,16 +1,16 @@
 <main>
-  <div class="container-login">
-    <div class="description-login-area">
-      <div>Gerencie suas tarefa com facilidade!</div>
-      <h1>TASK MANAGER</h1>
-      <div>Faça login aqui.</div>
-      <div>Ou</div>
-      <button (click)="navigateToSignin()">Crie uma conta</button>
+  <div class="text-white flex flex-col gap-2 w-[20%]">
+    <div class="flex flex-col justify-center items-center w-full gap-6">
+      <div class="flex w-auto text-2xl">TASK MANAGER</div>
+      <div class="">Faça login aqui.</div>
     </div>
     <form [formGroup]="loginForm" (ngSubmit)="login()">
-      <app-input label="Email" [control]="loginForm.controls.email" type="email" placeholder="Digite seu e-mail" />
-      <app-input label="Senha" [control]="loginForm.controls.password" type="password" placeholder="Digite sua senha" />
+      <app-input label="Email" [control]="loginForm.controls.email" type="email" placeholder="Digite seu e-mail"
+        placeholderStyle="font-weight: normal;" />
+      <app-input label="Senha" [control]="loginForm.controls.password" type="password" placeholder="Digite sua senha"
+        placeholderStyle="font-weight: normal;" />
       <app-button type="submit">Entrar</app-button>
     </form>
+    <button (click)="navigateToSignin()">Crie uma conta aqui</button>
   </div>
 </main>
