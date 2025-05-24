@@ -4,7 +4,8 @@
   <div class="flex flex-col !mb-6">
     <div class="project-header !rounded-t-md !rounded-b-none !pb-4 !mb-0 !inset-shadow-none !border-none">
       <div class="title-and-description w-full">
-        <div class="container-project-title border-b-solid border-b-1 border-white pb-2">
+        <div class="container-project-title pb-2"
+          [ngClass]="project.description ? 'border-b-solid border-b-1 border-white ': ''">
           <div class="project-name">{{ project.name }}</div>
           <button class="edit-project-name" (click)="onEditProject()">
             <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="edit"></mat-icon>
