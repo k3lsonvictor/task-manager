@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, ElementRef, EventEmitter, HostListener, Input, Output, ViewChild } from '@angular/core';
 import { finalize } from 'rxjs/operators';
 import { Card, CardComponent } from '../card/card.component';
 import { DragDropModule } from '@angular/cdk/drag-drop';
@@ -33,6 +33,7 @@ export interface Step {
   styleUrl: './step-collumn.component.css',
 })
 export class StepCollumnComponent {
+  @ViewChild('titleInput') titleInputRef!: ElementRef;
   @Input() cards: any[] = [];
   @Input() step!: Step;
 
@@ -103,6 +104,9 @@ export class StepCollumnComponent {
 
   onEditStep() {
     this.isEditing = true;
+    setTimeout(() => {
+      this.titleInputRef?.nativeElement.focus();
+    });
   }
 
   onConfirmEditStep() {
@@ -119,5 +123,23 @@ export class StepCollumnComponent {
 
   onCancelEditStep() {
     this.isEditing = false;
+  }
+
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent): void {
+    // Verifica se o clique ocorreu dentro do título
+    if (this.titleInputRef?.nativeElement && this.setTitleStep !== this.step.name) {
+      const clickedInsideTitle = this.titleInputRef.nativeElement.contains(event.target);
+      if (!clickedInsideTitle && this.isEditing && this.setTitleStep) {
+        this.isEditing = false;
+        this.stepService.editStepName(this.setTitleStep, this.step.id).subscribe({
+          next: () => {
+            this.step.name = this.setTitleStep; // Atualiza a exibição
+            this.isEditing = false;
+            this.stepService.notifyStepUpdate();
+          }
+        });
+      }
+    }
   }
 }

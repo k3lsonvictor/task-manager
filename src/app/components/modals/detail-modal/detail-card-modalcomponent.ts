@@ -172,7 +172,7 @@ export class DetailCardModalComponent {
         this.isEditingDescriptionCard = false;
         this.cardService.updateCard(this.selectedCard!.id, {
           description: this.setDescriptionCard,
-          tagId: this.selectedCard?.tagId,
+          tagId: this.selectedCard?.tagId ? this.selectedCard?.tagId : "",
           stageId: this.selectedCard?.stageId,
         }).subscribe({
           next: () => {

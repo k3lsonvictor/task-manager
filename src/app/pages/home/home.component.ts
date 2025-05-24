@@ -275,7 +275,7 @@ export class HomeComponent {
     const newPosition = event.currentIndex + 1;
 
     // 🔥 Agora chamamos `updateStepCard` passando a posição correta
-    this.cardService.updateStepCard(movedCard.id, newStepId, newPosition).subscribe({
+    this.cardService.updateStepCard(movedCard.id, newStepId, newPosition, movedCard.tag?.id ? movedCard.tag.id : null).subscribe({
       next: () => console.log(`Card ${movedCard.id} atualizado para o Step ${newStepId} na posição ${newPosition}`),
       error: err => console.error('Erro ao atualizar o card:', err)
     });

@@ -60,11 +60,12 @@ export class CardService {
   }
 
 
-  updateStepCard(cardId: string, newStepId: string, newPosition: number): Observable<any> {
+  updateStepCard(cardId: string, newStepId: string, newPosition: number, tagId: string | null): Observable<any> {
     return this.apiService.patch(`tasks/${cardId}`, {
       stageId: newStepId,
       taskId: cardId,
-      position: newPosition // 🔥 Envia a posição correta para o backend
+      position: newPosition,
+      tagId: tagId,
     });
   }
   updateCard(cardId: string, updates: Partial<{ title: string; description: string; stageId: string; position: number; tagId: string | null }>): Observable<any> {
