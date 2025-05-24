@@ -1,4 +1,4 @@
-import { Component, EventEmitter, HostListener, Output, ElementRef, ViewChild } from '@angular/core';
+import { Component, EventEmitter, HostListener, Output, ElementRef, ViewChild, OnInit } from '@angular/core';
 import { ModalService } from '../../../services/modals/modal.service';
 import { MatIconModule } from '@angular/material/icon';
 import { Card } from '../../card/card.component';
@@ -19,8 +19,8 @@ type SimpleCard = Omit<Card, 'position' | "limiteDate">;
   templateUrl: './detail-card-modal.component.html',
   styleUrl: './detail-card-modal.component.css'
 })
-export class DetailCardModalComponent {
-  @ViewChild('titleInput') titleInputRef!: ElementRef; // Referência ao elemento do input
+export class DetailCardModalComponent implements OnInit {
+  @ViewChild('titleInput') titleInputRef!: ElementRef;
   @ViewChild('descriptionInput') descriptionInputRef!: ElementRef;
   selectedCard: SimpleCard | null = null;
   setTitleCard: string = "";
@@ -37,32 +37,50 @@ export class DetailCardModalComponent {
   tagName = new FormControl<string>('');
   tagColor = new FormControl<string>('');
 
-
   constructor(
     private modalService: ModalService,
     private cardService: CardService,
     private tagsService: TagsService,
     private projectsService: ProjectsService,
-    private StepService: StepService,
-  ) {
+    private stepService: StepService,
+  ) { }
+
+  ngOnInit() {
+    // Observa o card selecionado
     this.cardService.selectedCard$.subscribe(state => {
       this.selectedCard = state;
+      if (this.selectedCard?.title) {
+        this.setTitleCard = this.selectedCard.title;
+      }
+      if (this.selectedCard?.description) {
+        this.setDescriptionCard = this.selectedCard.description;
+      }
     });
+
+    // Observa o projeto atual
     this.projectsService.currentProject$.subscribe(state => {
       if (state) {
         this.currentProjectId = state.id;
+        this.loadTags(state.id);
       }
-    })
-    const projectId = window.location.pathname.split('/').pop();
-    console.log('ID do projeto:', projectId);  // Log para verificar
-    if (projectId) {
-      this.tagsService.getTags(projectId).subscribe(tags => {
-        console.log('Tags do projeto:', tags, this.selectedCard);  // Log para verificar
-        this.tags = tags;  // Salva as tags no projeto
-      });
-    } else {
-      console.error('ID do projeto não encontrado na URL');
+    });
+
+    // Caso queira pegar o id do projeto pela URL (fallback)
+    if (!this.currentProjectId) {
+      const projectId = window.location.pathname.split('/').pop();
+      if (projectId) {
+        this.currentProjectId = projectId;
+        this.loadTags(projectId);
+      } else {
+        console.error('ID do projeto não encontrado na URL');
+      }
     }
+  }
+
+  loadTags(projectId: string) {
+    this.tagsService.getTags(projectId).subscribe(tags => {
+      this.tags = tags;
+    });
   }
 
   onCreateTag() {
@@ -72,9 +90,8 @@ export class DetailCardModalComponent {
   createTag() {
     this.tagsService.createTag(this.tagName.value!, this.tagColor.value!, this.currentProjectId).subscribe({
       next: (newTag) => {
-        console.log('Tag criada:', newTag);
-        this.tags.push(newTag); // Adiciona a nova tag à lista
-        this.createNewTag = false; // Fecha o modal de criação de tag
+        this.tags.push(newTag);
+        this.createNewTag = false;
       },
       error: (error) => {
         console.error('Erro ao criar tag:', error);
@@ -82,18 +99,8 @@ export class DetailCardModalComponent {
     });
   }
 
-  ngOnInit() {
-    if (this.selectedCard?.title) {
-      this.setTitleCard = this.selectedCard.title;
-    }
-    if (this.selectedCard?.description) {
-      this.setDescriptionCard = this.selectedCard.description;
-    }
-  }
-
   onEditCardTitle() {
     this.isEditingCardTitle = true;
-
     setTimeout(() => {
       this.titleInputRef.nativeElement.focus();
     }, 0);
@@ -101,7 +108,6 @@ export class DetailCardModalComponent {
 
   onEditDescriptionCard() {
     this.isEditingDescriptionCard = true;
-
     setTimeout(() => {
       this.descriptionInputRef.nativeElement.focus();
     }, 0);
@@ -117,7 +123,7 @@ export class DetailCardModalComponent {
         }).subscribe({
           next: () => {
             this.cardService.getCard(this.selectedCard!.id).subscribe(card => {
-              this.StepService.notifyStepUpdate();
+              this.stepService.notifyStepUpdate();
               this.cardService.selectCard(card);
             });
           }
@@ -131,7 +137,7 @@ export class DetailCardModalComponent {
       }).subscribe({
         next: () => {
           this.cardService.getCard(this.selectedCard!.id).subscribe(card => {
-            this.StepService.notifyStepUpdate();
+            this.stepService.notifyStepUpdate();
             this.cardService.selectCard(card);
           });
         }
@@ -157,7 +163,7 @@ export class DetailCardModalComponent {
         }).subscribe({
           next: () => {
             this.cardService.getCard(this.selectedCard!.id).subscribe(card => {
-              this.StepService.notifyStepUpdate();
+              this.stepService.notifyStepUpdate();
               this.cardService.selectCard(card);
             });
           }
@@ -177,7 +183,7 @@ export class DetailCardModalComponent {
         }).subscribe({
           next: () => {
             this.cardService.getCard(this.selectedCard!.id).subscribe(card => {
-              this.StepService.notifyStepUpdate();
+              this.stepService.notifyStepUpdate();
               this.cardService.selectCard(card);
             });
           }

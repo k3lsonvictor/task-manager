@@ -38,18 +38,10 @@ export class CreateModalComponent {
     this.modalService.modalsState$.subscribe(state => {
       this.typeModal = state['createProjectModal'] || false;
     });
-    const projectId = window.location.pathname.split('/').pop();
-    if (projectId) {
-      this.tagsService.getTags(projectId).subscribe(tags => {
-        this.tags = tags;  // Salva as tags no projeto
-      });
-    } else {
-      console.error('ID do projeto não encontrado na URL');
-    }
   }
 
   ngOnInit() {
-    this.resetForm(); // 🔥 Resetando os valores ao abrir
+    this.resetForm();
 
     this.stepService.selectedStep$.subscribe(selectedStep => {
       this.selStep = selectedStep;
@@ -59,7 +51,17 @@ export class CreateModalComponent {
       this.title.setValue(this.project.name);
       this.description.setValue(this.project?.description ?? '');
     }
+
+    const projectId = window.location.pathname.split('/').pop();
+    if (projectId) {
+      this.tagsService.getTags(projectId).subscribe(tags => {
+        this.tags = tags;
+      });
+    } else {
+      console.error('ID do projeto não encontrado na URL');
+    }
   }
+
 
   editProjectModal() {
     if (!this.project) return;

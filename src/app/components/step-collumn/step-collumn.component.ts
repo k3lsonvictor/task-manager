@@ -1,6 +1,5 @@
-import { Component, ElementRef, EventEmitter, HostListener, Input, Output, ViewChild } from '@angular/core';
-import { finalize } from 'rxjs/operators';
-import { Card, CardComponent } from '../card/card.component';
+import { Component, ElementRef, HostListener, Input, ViewChild, OnInit, OnChanges, SimpleChanges } from '@angular/core';
+import { CardComponent } from '../card/card.component';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { MatIconModule } from '@angular/material/icon';
 import { StepService } from '../../api/services/step-service.service';
@@ -32,55 +31,33 @@ export interface Step {
   templateUrl: './step-collumn.component.html',
   styleUrl: './step-collumn.component.css',
 })
-export class StepCollumnComponent {
+export class StepCollumnComponent implements OnInit, OnChanges {
   @ViewChild('titleInput') titleInputRef!: ElementRef;
   @Input() cards: any[] = [];
   @Input() step!: Step;
 
   setTitleStep: string = "";
-
   isEditing: boolean = false;
-
   isDeleting: boolean = false;
-
   isLoading: boolean = false;
 
+  constructor(
+    private modalService: ModalService,
+    private stepService: StepService,
+    private cardService: CardService
+  ) { }
 
-  constructor(private modalService: ModalService, private stepService: StepService, cardService: CardService) {
-    cardService.updatedCard$.subscribe((updatedCard) => {
-      console.log('updatedCard:', updatedCard);
+  ngOnInit() {
+    this.cardService.updatedCard$.subscribe((updatedCard) => {
       if (updatedCard === this.step.id) {
         this.isLoading = true;
-      }
-      else {
-        if (updatedCard) { // Verifica se updatedCard não é null ou undefined
-          console.log('Card atualizado:', updatedCard);
-          if (typeof updatedCard === 'object' && updatedCard !== null && 'stageId' in updatedCard && updatedCard.stageId === this.step.id) {
-            console.log('Card atualizado:', updatedCard);
-            this.stepService.notifyStepUpdate();
-            // setTimeout(() => {
-            //   this.isLoading = false;
-
-            // }, 1000)
-          }
-        }
+      } else if (updatedCard && typeof updatedCard === 'object' && updatedCard !== null && 'stageId' in updatedCard && updatedCard.stageId === this.step.id) {
+        this.stepService.notifyStepUpdate();
       }
     });
   }
 
-  trackByTaskId(index: number, card: any): any {
-    return card.id; // Substitua 'id' pelo campo único da sua tarefa
-  }
-
-  // ngOnInit() {
-  //   this.isLoading = true;
-  //   this.setTitleStep = this.step.name;
-  //   if (this.step.tasks.length > 0) {
-  //     this.isLoading = false;
-  //   }
-  // }
-
-  ngOnChanges() {
+  ngOnChanges(changes: SimpleChanges) {
     this.isLoading = true;
     if (this.step) {
       this.setTitleStep = this.step.name;
@@ -88,9 +65,13 @@ export class StepCollumnComponent {
     }
   }
 
+  trackByTaskId(index: number, card: any): any {
+    return card.id;
+  }
+
   onCreateStep() {
     this.stepService.setSelectedStep(this.step);
-    this.modalService.openModal("createCardModal")
+    this.modalService.openModal("createCardModal");
   }
 
   onDeleteStep() {
@@ -99,7 +80,7 @@ export class StepCollumnComponent {
       next: () => {
         this.stepService.notifyStepUpdate();
       }
-    })
+    });
   }
 
   onEditStep() {
@@ -113,7 +94,7 @@ export class StepCollumnComponent {
     if (this.setTitleStep.trim()) {
       this.stepService.editStepName(this.setTitleStep, this.step.id).subscribe({
         next: () => {
-          this.step.name = this.setTitleStep; // Atualiza a exibição
+          this.step.name = this.setTitleStep;
           this.isEditing = false;
           this.stepService.notifyStepUpdate();
         }
@@ -127,14 +108,13 @@ export class StepCollumnComponent {
 
   @HostListener('document:click', ['$event'])
   onDocumentClick(event: MouseEvent): void {
-    // Verifica se o clique ocorreu dentro do título
     if (this.titleInputRef?.nativeElement && this.setTitleStep !== this.step.name) {
       const clickedInsideTitle = this.titleInputRef.nativeElement.contains(event.target);
       if (!clickedInsideTitle && this.isEditing && this.setTitleStep) {
         this.isEditing = false;
         this.stepService.editStepName(this.setTitleStep, this.step.id).subscribe({
           next: () => {
-            this.step.name = this.setTitleStep; // Atualiza a exibição
+            this.step.name = this.setTitleStep;
             this.isEditing = false;
             this.stepService.notifyStepUpdate();
           }

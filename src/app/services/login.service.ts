@@ -10,7 +10,7 @@ import { ApiService } from '../api/services/api.service';
 export class LoginService {
   private authStatus = new BehaviorSubject<boolean>(this.hasToken());
 
-  constructor(private router: Router, private apiService: ApiService) {}
+  constructor(private router: Router, private apiService: ApiService) { }
 
   login(email: string, password: string): Observable<{ access_token: string, userId: string }> {
     return this.apiService.post<{ access_token: string, userId: string }>('signIn', { email, password }).pipe(
@@ -26,7 +26,7 @@ export class LoginService {
       })
     );
   }
-  
+
 
   logout(): void {
     localStorage.removeItem('token');

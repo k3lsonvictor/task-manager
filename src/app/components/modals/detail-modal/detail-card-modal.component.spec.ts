@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { DetailCardModalComponent } from './detail-card-modalcomponent';
+import { DetailCardModalComponent } from './detail-card-modal.component';
 
 describe('ModalComponent', () => {
   let component: DetailCardModalComponent;
@@ -10,7 +10,7 @@ describe('ModalComponent', () => {
     await TestBed.configureTestingModule({
       imports: [DetailCardModalComponent]
     })
-    .compileComponents();
+      .compileComponents();
 
     fixture = TestBed.createComponent(DetailCardModalComponent);
     component = fixture.componentInstance;

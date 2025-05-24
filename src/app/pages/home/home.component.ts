@@ -6,7 +6,7 @@ import { Card, SimpleCard } from '../../components/card/card.component';
 import { StepService } from '../../api/services/step-service.service';
 import { ModalService } from '../../services/modals/modal.service';
 import { CreateModalComponent } from '../../components/modals/create-modal/create-card-modal.component';
-import { DetailCardModalComponent } from '../../components/modals/detail-modal/detail-card-modalcomponent';
+import { DetailCardModalComponent } from '../../components/modals/detail-modal/detail-card-modal.component';
 import { Project, ProjectsService } from '../../api/services/projects.service';
 import { ActivatedRoute } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
@@ -149,22 +149,7 @@ export class HomeComponent {
     private cardService: CardService,
     private userService: UserService,
     private tagsService: TagsService
-  ) {
-    this.modalService.modalsState$.subscribe(state => {
-      this.detailCardModalIsOpen = state["detailModal"] || false;
-      this.createCardModalIsOpen = state["createCardModal"] || false;
-      this.isEditingProject = state["editProjectModal"] || false;
-      this.isCreatingProject = state["createProjectModal"] || false;
-    })
-    this.projectsService.currentProject$.subscribe(state => {
-      if (state) {
-        this.project = state;
-      }
-    })
-    this.projectsService.createProject$.subscribe(() => {
-      this.onCreateProject();
-    });
-  }
+  ) { }
 
   onEditProject() {
     this.isEditingProject = true;
@@ -177,18 +162,34 @@ export class HomeComponent {
   }
 
   ngOnInit() {
-    const userId = localStorage.getItem('userId');
+    this.modalService.modalsState$.subscribe(state => {
+      this.detailCardModalIsOpen = state["detailModal"] || false;
+      this.createCardModalIsOpen = state["createCardModal"] || false;
+      this.isEditingProject = state["editProjectModal"] || false;
+      this.isCreatingProject = state["createProjectModal"] || false;
+    });
 
+    this.projectsService.currentProject$.subscribe(state => {
+      if (state) {
+        this.project = state;
+      }
+    });
+
+    this.projectsService.createProject$.subscribe(() => {
+      this.onCreateProject();
+    });
+
+    const userId = localStorage.getItem('userId');
     if (userId) {
       this.userService.getUser(userId).subscribe(user => {
-        console.log('Usuário recuperado:', user);  // Log para verificar
-        this.user = user;  // Salva o usuário na variável 'user'
+        console.log('Usuário recuperado:', user);
+        this.user = user;
       });
     }
 
     this.route.paramMap.subscribe(params => {
       const projectId = params.get('projectId');
-      if (projectId && projectId !== this.project?.id) { // Verifica se o projectId mudou
+      if (projectId && projectId !== this.project?.id) {
         console.log('Mudou para o projeto:', projectId);
 
         this.projectsService.getProject(projectId).subscribe(project => {
@@ -201,8 +202,8 @@ export class HomeComponent {
           });
 
           this.tagsService.getTags(project.id).subscribe(tags => {
-            console.log('Tags do projeto:', tags);  // Log para verificar
-            this.tags = tags;  // Salva as tags no projeto
+            console.log('Tags do projeto:', tags);
+            this.tags = tags;
           });
         });
       }
@@ -211,7 +212,7 @@ export class HomeComponent {
     this.stepService.stepUpdated$.subscribe(() => {
       this.stepService.getSteps(this.project.id).subscribe(steps => {
         this.steps = this.sortStepsByCreatedAt(steps);
-        this.cdr.detectChanges(); // Força a atualização do Angular});
+        this.cdr.detectChanges();
       });
     });
 
