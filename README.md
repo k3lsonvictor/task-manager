@@ -1,60 +1,107 @@
-# TaskManager
+# Task Manager
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.1.6.
+Task Manager é uma aplicação web desenvolvida em Angular para organização de tarefas em projetos, com suporte a etapas (steps), cartões (cards), tags, e gerenciamento de projetos colaborativos.
 
-## Development server
+## Funcionalidades
 
-To start a local development server, run:
+- **Gerenciamento de Projetos:** Crie, edite e exclua projetos.
+- **Etapas (Steps):** Organize tarefas em etapas personalizadas.
+- **Cartões (Cards):** Adicione, edite, mova e exclua tarefas dentro das etapas.
+- **Tags:** Categorize tarefas com tags coloridas.
+- **Drag & Drop:** Reordene tarefas e etapas facilmente.
+- **Modais Dinâmicos:** Edição e visualização de detalhes em modais.
+- **Autenticação:** Proteção de rotas e gerenciamento de sessão.
+- **Responsivo:** Interface adaptada para diferentes tamanhos de tela.
+
+## Tecnologias Utilizadas
+
+- [Angular](https://angular.io/) 19+
+- RxJS
+- Angular Material
+- [CDK Drag & Drop](https://material.angular.io/cdk/drag-drop/overview)
+- TypeScript
+
+## Instalação
+
+Clone o repositório e instale as dependências:
+
+```bash
+git clone https://github.com/seu-usuario/task-manager.git
+cd task-manager
+npm install
+```
+
+## Servidor de Desenvolvimento
+
+Para iniciar o servidor local:
 
 ```bash
 ng serve
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+Acesse [http://localhost:4200/](http://localhost:4200/) no navegador.
 
-## Code scaffolding
+## Build de Produção
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
-
-```bash
-ng generate component component-name
-```
-
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
-
-```bash
-ng generate --help
-```
-
-## Building
-
-To build the project run:
+Para gerar uma build otimizada:
 
 ```bash
 ng build
 ```
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+Os arquivos finais estarão em `dist/`.
 
-## Running unit tests
+## Testes
 
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
+### Unitários
+
+Execute os testes unitários com:
 
 ```bash
 ng test
 ```
 
-## Running end-to-end tests
+### End-to-End (E2E)
 
-For end-to-end (e2e) testing, run:
+Para testes e2e (caso configurado):
 
 ```bash
 ng e2e
 ```
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+> **Nota:** O Angular CLI não inclui um framework e2e por padrão. Você pode configurar Cypress, Playwright ou outro de sua preferência.
 
-## Additional Resources
+## Estrutura do Projeto
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
-# task-manager
+```
+src/
+  app/
+    components/
+    pages/
+    services/
+    api/
+    guards/
+    ...
+```
+
+- **components/**: Componentes reutilizáveis (botões, modais, colunas, etc)
+- **pages/**: Páginas principais (Home, Login, etc)
+- **services/**: Serviços de lógica de negócio e comunicação
+- **api/**: Serviços de integração com backend
+- **guards/**: Proteção de rotas
+
+## Contribuição
+
+Contribuições são bem-vindas!  
+Abra uma issue ou envie um pull request.
+
+## Recursos Adicionais
+
+- [Documentação Angular CLI](https://angular.dev/tools/cli)
+- [Angular Material](https://material.angular.io/)
+
+---
+
+**Licença:** MIT
+
+---
