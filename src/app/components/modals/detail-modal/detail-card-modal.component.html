@@ -17,12 +17,12 @@
       <div class="continer-description !h-auto">
         @if(!isEditingDescriptionCard) {
         <label class="!text-md" for="">Descrição</label>
-        <div class="h-auto text-sm text-white bg-gray-700 rounded-md p-2" (click)="onEditDescriptionCard()">
+        <div class="h-[100px] text-sm text-white bg-gray-700 rounded-md p-2" (click)="onEditDescriptionCard()">
           {{setDescriptionCard ?
           setDescriptionCard : selectedCard?.description }}</div>
         }
         @if(isEditingDescriptionCard) {
-        <label class="!text-[20px]" for="">Descrição</label>
+        <label class="!text-md" for="">Descrição</label>
         <textarea #descriptionInput
           class="w-full h-[100px] text-sm bg-gray-700 rounded-md !p-2 focus:!outline-none text-white resize-none"
           [(ngModel)]="setDescriptionCard"></textarea>

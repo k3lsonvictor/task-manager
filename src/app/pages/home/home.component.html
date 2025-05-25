@@ -85,7 +85,7 @@
     class="container-steps !mt-4 justify-center items-center text-white border-2 border-gray-600 rounded-2xl border-dashed flex-col"
     cdkDropListGroup *ngIf="!steps || steps.length === 0">
     <div>Nenhuma etapa ainda</div>
-    <app-button (click)="createStep()" [customClass]="'!w-auto'">
+    <app-button [customClass]="'!w-auto'" [clickFunction]="createStep">
       <div class="flex items-center justify-center bg-white rounded-md !w-[24px]">
         <mat-icon class="!text-[#5252D9]" fontIcon="add"></mat-icon>
       </div>
