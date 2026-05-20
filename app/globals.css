@@ -1,28 +1,77 @@
-:root {
-  color-scheme: dark;
+@import 'tailwindcss';
+
+@theme {
+  --color-app-bg: #1e1f29;
+  --color-auth-bg: #282a37;
+  --color-sidebar: #2a2b3d;
+  --color-surface: #333645;
+  --color-surface-elevated: #36383f;
+  --color-project-item: #3a3b4e;
+  --color-muted: #7e8394;
+  --color-accent: #5252d9;
+  --color-btn: #555b69;
+  --color-btn-hover: #198df5;
+  --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
 }
 
-* {
-  box-sizing: border-box;
+@layer base {
+  * {
+    box-sizing: border-box;
+  }
+
+  body {
+    @apply m-0 bg-app-bg font-sans text-white antialiased;
+  }
+
+  a {
+    @apply no-underline text-inherit;
+  }
 }
 
-body {
-  margin: 0;
-  font-family: Inter, Arial, sans-serif;
-  background: #111827;
-  color: #f9fafb;
+@layer utilities {
+  .scrollbar-thin {
+    scrollbar-width: thin;
+    scrollbar-color: #bdbdbd #626262;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar {
+    height: 8px;
+    width: 8px;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar-thumb {
+    background-color: #bdbdbd;
+    border-radius: 6px;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar-thumb:hover {
+    background-color: #d8d8d8;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar-track {
+    background: #626262;
+  }
+
+  .gradient-project-header {
+    background: linear-gradient(
+      90deg,
+      rgba(89, 84, 221, 1) 0%,
+      rgba(29, 64, 188, 1) 35%,
+      rgba(92, 89, 186, 1) 100%
+    );
+  }
+
+  .animate-blink-step {
+    animation: blink-step 1s infinite;
+  }
 }
 
-a { color: inherit; }
-
-.container {
-  max-width: 1120px;
-  margin: 0 auto;
-  padding: 1rem;
-}
-
-.card {
-  background: #1f2937;
-  border-radius: 12px;
-  padding: 1rem;
+@keyframes blink-step {
+  0%,
+  100% {
+    background-color: rgba(82, 82, 217, 0.3);
+  }
+  50% {
+    background-color: rgba(82, 82, 217, 0.1);
+  }
 }
