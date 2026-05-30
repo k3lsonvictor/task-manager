@@ -30,11 +30,15 @@ Acesse [http://localhost:3000](http://localhost:3000).
 
 ## API
 
-Por padrão, o frontend usa a API em produção. Para apontar para outro host:
+Por padrão, o frontend usa a API em produção (`Render`). O host gratuito pode demorar no **cold start** (10–30s na primeira requisição).
+
+Para apontar para outra API:
 
 ```bash
-NEXT_PUBLIC_API_URL=http://localhost:3000 npm run dev
+NEXT_PUBLIC_API_URL=https://sua-api.com npm run dev
 ```
+
+> O Next.js roda em `localhost:3000`. Se usar `json-server` local, suba em outra porta (ex.: `3001`) para não conflitar.
 
 ## Scripts
 

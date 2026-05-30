@@ -1,8 +1,10 @@
+import { ProtectedRoute } from '@/components/auth/protected-route';
 import { AppShell } from '@/components/layout/app-shell';
-import { fetchProjects } from '@/lib/api';
 
-export default async function TasksLayout({ children }: { children: React.ReactNode }) {
-  const projects = await fetchProjects().catch(() => []);
-
-  return <AppShell projects={projects}>{children}</AppShell>;
+export default function TasksLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <ProtectedRoute>
+      <AppShell>{children}</AppShell>
+    </ProtectedRoute>
+  );
 }

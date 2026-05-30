@@ -5,20 +5,51 @@ import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { InputField } from '@/components/ui/input-field';
+import { useLogin } from '@/lib/hooks/use-auth';
 
 type Props = { mode: 'login' | 'signin' };
+
+function getSafeRedirectPath() {
+  const redirectPath = new URLSearchParams(window.location.search).get('redirect');
+
+  if (!redirectPath || !redirectPath.startsWith('/') || redirectPath.startsWith('//')) {
+    return '/tasks';
+  }
+
+  return redirectPath;
+}
 
 export function AuthForm({ mode }: Props) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
+  const loginMutation = useLogin();
+  const submitting = loading || loginMutation.isPending;
 
-  async function onSubmit(event: React.FormEvent<HTMLFormElement>) {
+  function onSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    setLoading(true);
-    setTimeout(() => {
-      setLoading(false);
-      router.push('/tasks');
-    }, 500);
+
+    if (mode === 'signin') {
+      setLoading(true);
+      setTimeout(() => {
+        setLoading(false);
+        router.push('/tasks');
+      }, 500);
+
+      return;
+    }
+
+    const formData = new FormData(event.currentTarget);
+    const email = String(formData.get('email') ?? '');
+    const password = String(formData.get('password') ?? '');
+
+    loginMutation.mutate(
+      { email, password },
+      {
+        onSuccess() {
+          router.push(getSafeRedirectPath());
+        },
+      }
+    );
   }
 
   return (
@@ -51,10 +82,13 @@ export function AuthForm({ mode }: Props) {
             minLength={6}
           />
           <div className="mt-2.5">
-            <Button type="submit" disabled={loading}>
-              {loading ? 'Enviando...' : mode === 'login' ? 'Entrar' : 'Cadastrar'}
+            <Button type="submit" disabled={submitting}>
+              {submitting ? 'Enviando...' : mode === 'login' ? 'Entrar' : 'Cadastrar'}
             </Button>
           </div>
+          {loginMutation.isError ? (
+            <p className="text-center text-sm text-red-300">{loginMutation.error.message}</p>
+          ) : null}
         </form>
 
         <Link

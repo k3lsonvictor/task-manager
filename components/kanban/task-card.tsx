@@ -1,16 +1,27 @@
 type Props = {
-  title: string;
-  tag?: string;
+  description?: string;
+  name: string;
+  onClick?: () => void;
+  position?: number;
 };
 
-export function TaskCard({ title, tag }: Props) {
+export function TaskCard({ description, name, onClick, position }: Props) {
   return (
-    <article className="flex h-20 w-full cursor-pointer flex-col justify-around rounded-none bg-surface-elevated px-2.5 py-1.5">
-      <div className="flex items-center justify-between px-2.5">
-        <h4 className="text-sm text-white">{title}</h4>
-      </div>
-      {tag ? (
-        <span className="w-fit rounded bg-[#58616b] px-1 py-0.5 text-xs text-white">{tag}</span>
+    <article
+      className="flex min-h-20 w-full cursor-pointer flex-col gap-2 rounded-none bg-surface-elevated px-4 py-3 transition-colors hover:bg-white/10"
+      onClick={onClick}
+    >
+      <header className="flex items-start justify-between gap-3">
+        <h4 className="min-w-0 text-sm font-medium leading-5 text-white">{name}</h4>
+        {typeof position === 'number' ? (
+          <span className="shrink-0 rounded bg-white/10 px-1.5 py-0.5 text-[11px] text-white/55">
+            #{position + 1}
+          </span>
+        ) : null}
+      </header>
+
+      {description ? (
+        <p className="line-clamp-2 text-xs leading-5 text-white/50">{description}</p>
       ) : null}
     </article>
   );
