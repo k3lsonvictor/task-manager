@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Modal } from '@/components/ui/modal';
 import { StepColumn } from '@/components/kanban/step-column';
 import type { Step, Task } from '@/lib/api/api';
+import { useProjectEvents } from '@/lib/hooks/use-project-events';
 import { useProject, useUpdateProject } from '@/lib/hooks/use-projects';
 import { useCreateStep, useDeleteStep, useSteps, useUpdateSteps } from '@/lib/hooks/use-steps';
 import { useCreateTask, useReorderTasks, useTasks, useUpdateTask } from '@/lib/hooks/use-tasks';
@@ -64,6 +65,8 @@ function getChangedTaskPlacements(currentTasks: Task[], nextTasks: Task[]) {
 }
 
 export function ProjectBoard({ projectId }: Props) {
+  useProjectEvents(projectId);
+
   const { data: project, isPending, isError } = useProject(projectId);
   const { data: steps = [], isPending: isStepsPending, isError: isStepsError } = useSteps(projectId);
   const { data: tasks = [], isPending: isTasksPending, isError: isTasksError } = useTasks(projectId);

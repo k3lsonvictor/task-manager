@@ -1,4 +1,4 @@
-const API_BASE_URL = process.env.API_BASE_URL ?? process.env.NEXT_PUBLIC_API_URL;
+export const API_BASE_URL = process.env.API_BASE_URL ?? process.env.NEXT_PUBLIC_API_URL;
 
 const DEFAULT_TIMEOUT_MS = 8_000;
 
