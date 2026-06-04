@@ -23,6 +23,7 @@ import {
   useSensors,
 } from '@dnd-kit/core';
 import { sortableKeyboardCoordinates } from '@dnd-kit/sortable';
+import { ChevronDown } from 'lucide-react';
 
 
 type Props = { projectId: string };
@@ -500,7 +501,7 @@ export function ProjectBoard({ projectId }: Props) {
           </button>
         </div>
 
-        <div className="flex flex-wrap items-center gap-2 text-sm text-white/55">
+        {/* <div className="flex flex-wrap items-center gap-2 text-sm text-white/55">
           <span className="rounded-md bg-white/5 px-3 py-1.5">Tags</span>
           <button
             type="button"
@@ -509,7 +510,7 @@ export function ProjectBoard({ projectId }: Props) {
           >
             <IconAdd className="h-4 w-4" />
           </button>
-        </div>
+        </div> */}
       </header>
 
       <div className="flex items-center justify-between gap-4">
@@ -894,10 +895,11 @@ export function ProjectBoard({ projectId }: Props) {
 
             <label className="flex flex-col gap-2">
               <span className="text-sm font-medium text-white/80">Etapa</span>
+              <div className='relative'>
               <select
                 value={taskDetailsStepId}
                 onChange={(event) => setTaskDetailsStepId(event.target.value)}
-                className="h-11 rounded-lg border border-white/10 bg-white/5 px-3 text-sm text-white outline-none transition-colors focus:border-accent"
+                className="h-11 w-full appearance-none rounded-lg border border-white/10 bg-white/5 px-3 pr-10 text-sm text-white"
                 required
               >
                 {steps.map((step) => (
@@ -906,9 +908,13 @@ export function ProjectBoard({ projectId }: Props) {
                   </option>
                 ))}
               </select>
+              <ChevronDown
+                className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-white/70"
+              />
+              </div>
             </label>
 
-            {selectedTask ? (
+            {/* {selectedTask ? (
               <div className="grid gap-3 rounded-lg border border-white/10 bg-white/[0.03] p-3 text-sm text-white/60 sm:grid-cols-2">
                 <p>
                   <span className="block text-xs uppercase tracking-[0.14em] text-white/35">
@@ -923,7 +929,7 @@ export function ProjectBoard({ projectId }: Props) {
                   <span className="break-all">{selectedTask.id}</span>
                 </p>
               </div>
-            ) : null}
+            ) : null} */}
 
             {updateTask.isError ? (
               <p className="rounded-lg border border-red-300/15 bg-red-300/10 px-3 py-2 text-sm text-red-200">

@@ -22,6 +22,21 @@ export type LoginResponse = {
   };
 };
 
+export type CreateUserDto = {
+  name: string;
+  email: string;
+  password: string;
+};
+
+export type VerifyEmailDto = {
+  email: string;
+  code: string;
+};
+
+export type ResendVerificationEmailDto = {
+  email: string;
+};
+
 export type UpdateProjectDto = {
   name: string;
   description?: string;

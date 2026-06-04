@@ -1,10 +1,13 @@
-import type { InputHTMLAttributes } from 'react';
+import { forwardRef, type InputHTMLAttributes } from 'react';
 
 type Props = InputHTMLAttributes<HTMLInputElement> & {
   label: string;
 };
 
-export function InputField({ label, className = '', id, ...props }: Props) {
+export const InputField = forwardRef<HTMLInputElement, Props>(function InputField(
+  { label, className = '', id, ...props },
+  ref
+) {
   const inputId = id ?? label.toLowerCase().replace(/\s/g, '-');
 
   return (
@@ -14,10 +17,11 @@ export function InputField({ label, className = '', id, ...props }: Props) {
     >
       <span className="text-xs font-semibold text-white">{label}</span>
       <input
+        ref={ref}
         id={inputId}
         className="w-full border-none bg-transparent text-sm font-semibold text-white/70 outline-none placeholder:font-normal placeholder:text-white/50 autofill:shadow-[inset_0_0_0_1000px_#333645] autofill:[-webkit-text-fill-color:white]"
         {...props}
       />
     </label>
   );
-}
+});

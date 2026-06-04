@@ -26,7 +26,7 @@ export async function POST(request: Request) {
     const message = error instanceof Error ? error.message : 'Não foi possível fazer login';
 
     return NextResponse.json(
-      { error: getErrorMessage(error, message) },
+      { error: getErrorMessage(error, message), statusCode: status },
       { status }
     );
   }

@@ -1,6 +1,12 @@
 import { fetchWithTimeout } from '@/lib/api/api-client';
 import { ApiError, getErrorMessage } from '@/lib/api/api-errors';
-import type { LoginDto, LoginResponse } from '@/lib/api/api-types';
+import type {
+  CreateUserDto,
+  LoginDto,
+  LoginResponse,
+  ResendVerificationEmailDto,
+  VerifyEmailDto,
+} from '@/lib/api/api-types';
 import {
   BACKEND_AUTH_COOKIE_NAME,
   BACKEND_REFRESH_COOKIE_NAME,
@@ -61,6 +67,62 @@ export async function login(dto: LoginDto): Promise<LoginResponse> {
 
   if (!response.ok) {
     throw new ApiError(getErrorMessage(data, 'Não foi possível fazer login'), response.status);
+  }
+
+  return data;
+}
+
+export async function createUser(dto: CreateUserDto): Promise<unknown> {
+  const response = await fetchWithTimeout('users', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(dto),
+  });
+  const data = await response.json().catch(() => null);
+
+  if (!response.ok) {
+    throw new ApiError(getErrorMessage(data, 'Não foi possível criar sua conta'), response.status);
+  }
+
+  return data;
+}
+
+export async function verifyEmail(dto: VerifyEmailDto): Promise<unknown> {
+  const response = await fetchWithTimeout('users/verify-email', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(dto),
+  });
+  const data = await response.json().catch(() => null);
+
+  if (!response.ok) {
+    throw new ApiError(getErrorMessage(data, 'Não foi possível verificar seu email'), response.status);
+  }
+
+  return data;
+}
+
+export async function resendVerificationEmail(
+  dto: ResendVerificationEmailDto
+): Promise<unknown> {
+  const response = await fetchWithTimeout('users/resend-verification-email', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(dto),
+  });
+  const data = await response.json().catch(() => null);
+
+  if (!response.ok) {
+    throw new ApiError(
+      getErrorMessage(data, 'Não foi possível reenviar o email de verificação'),
+      response.status
+    );
   }
 
   return data;
