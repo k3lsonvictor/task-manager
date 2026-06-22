@@ -55,16 +55,16 @@ export function Modal({
         role="dialog"
         aria-modal="true"
         aria-labelledby={titleId}
-        className={`w-full max-w-md rounded-lg border border-white/10 bg-app-bg p-5 shadow-2xl ${className}`}
+        className={`w-full max-w-md rounded-lg border border-foreground/10 bg-app-bg p-5 shadow-2xl ${className}`}
         onMouseDown={(event) => event.stopPropagation()}
       >
         <div className="mb-5">
           {description ? (
-            <p className="mb-2 text-xs font-medium uppercase tracking-[0.18em] text-muted">
+            <p className="mb-2 text-xs font-medium uppercase tracking-[0.18em] text-muted-foreground">
               {description}
             </p>
           ) : null}
-          <h2 id={titleId} className="text-xl font-semibold text-white">
+          <h2 id={titleId} className="text-xl font-semibold text-foreground">
             {title}
           </h2>
         </div>

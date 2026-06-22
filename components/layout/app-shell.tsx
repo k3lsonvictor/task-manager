@@ -4,8 +4,10 @@ import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import { IconAdd, IconTimeline } from '@/components/icons';
 import { Modal } from '@/components/ui/modal';
+import { ThemeToggle } from '@/components/theme-toggle';
 import type { Project } from '@/lib/api/api';
 import { useCreateProject, useProjects } from '@/lib/hooks/use-projects';
 
@@ -67,19 +69,19 @@ export function AppShell({ children }: Props) {
 
   return (
     <div className="flex min-h-dvh w-full bg-app-bg">
-      <aside className="flex h-dvh w-[270px] shrink-0 flex-col border-r border-white/10 bg-app-bg px-5 py-6 text-white">
-        <div className="flex w-full flex-col gap-8 border-b border-white/10 pb-5">
+      <aside className="flex h-dvh w-[270px] shrink-0 flex-col border-r border-foreground/10 bg-app-bg px-5 py-6 text-foreground">
+        <div className="flex w-full flex-col gap-8 border-b border-foreground/10 pb-5">
           <Link href="/tasks" className="w-fit">
-            <span className="block text-lg font-semibold uppercase tracking-[0.18em] text-white">
+            <span className="block text-lg font-semibold uppercase tracking-[0.18em] text-foreground">
               Task Manager
             </span>
           </Link>
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2 text-white/80">
+            <div className="flex items-center gap-2 text-foreground/80">
               <IconTimeline className="h-5 w-5" />
               <h3 className="text-sm font-semibold">Projetos</h3>
             </div>
-            <span className="rounded-md bg-white/5 px-2 py-1 text-xs text-white/45">
+            <span className="rounded-md bg-foreground/5 px-2 py-1 text-xs text-foreground/45">
               {projects.length}
             </span>
           </div>
@@ -88,13 +90,13 @@ export function AppShell({ children }: Props) {
         <div className="mt-5 flex min-h-0 flex-1 flex-col justify-between gap-6">
           <div className="flex min-h-0 flex-col gap-3">
             {isPending ? (
-              <p className="rounded-lg bg-white/[0.03] px-3 py-2 text-sm text-white/45">
+              <p className="rounded-lg bg-foreground/[0.03] px-3 py-2 text-sm text-foreground/45">
                 Carregando projetos...
               </p>
             ) : (
               <>
                 {isError ? (
-                  <p className="rounded-lg border border-amber-300/15 bg-amber-300/10 px-3 py-2 text-xs leading-relaxed text-amber-200/90">
+                  <p className="rounded-lg border border-amber-300/15 bg-amber-300/10 px-3 py-2 text-xs leading-relaxed text-amber-700 dark:text-amber-200">
                     Não foi possível carregar os projetos.
                   </p>
                 ) : null}
@@ -107,11 +109,10 @@ export function AppShell({ children }: Props) {
                       <Link
                         href={href}
                         key={project.id}
-                        className={`group flex w-full items-center rounded-lg px-3 py-2.5 text-sm transition-colors ${
-                          active
-                            ? 'bg-white/10 text-white ring-1 ring-white/10'
-                            : 'text-white/60 hover:bg-white/[0.06] hover:text-white'
-                        }`}
+                        className={`group flex w-full items-center rounded-lg px-3 py-2.5 text-sm transition-colors ${active
+                          ? 'bg-foreground/10 text-foreground ring-1 ring-foreground/10'
+                          : 'text-foreground/60 hover:bg-foreground/[0.06] hover:text-foreground'
+                          }`}
                       >
                         <span className="truncate">{project.name}</span>
                       </Link>
@@ -122,7 +123,7 @@ export function AppShell({ children }: Props) {
             )}
             <Button
               fullWidth
-              className="rounded-lg !bg-white/5 text-sm !text-white/80 hover:!bg-white/10 hover:!text-white"
+              className="rounded-lg bg-foreground/5 text-sm text-foreground/80 hover:bg-foreground/10 hover:text-foreground"
               onClick={openCreateModal}
             >
               <span className="flex items-center justify-center gap-2">
@@ -132,9 +133,12 @@ export function AppShell({ children }: Props) {
             </Button>
           </div>
 
-          <Button onClick={onLogout} variant="ghost" className="w-full justify-center rounded-lg py-2 text-sm">
-            Logout
-          </Button>
+          <div className="flex flex-col gap-3">
+            <ThemeToggle />
+            <Button onClick={onLogout} variant="ghost" className="w-full justify-center rounded-lg py-2 text-sm">
+              Logout
+            </Button>
+          </div>
         </div>
       </aside>
 
@@ -151,28 +155,28 @@ export function AppShell({ children }: Props) {
         <form onSubmit={onCreateSubmit}>
           <div className="flex flex-col gap-4">
             <label className="flex flex-col gap-2">
-              <span className="text-sm font-medium text-white/80">Nome</span>
-              <input
+              <span className="text-sm font-medium text-foreground/80">Nome</span>
+              <Input
                 value={name}
                 onChange={(event) => setName(event.target.value)}
-                className="h-11 rounded-lg border border-white/10 bg-white/5 px-3 text-sm text-white outline-none transition-colors placeholder:text-white/35 focus:border-accent"
+                className="h-11 rounded-lg border border-foreground/10 bg-foreground/5 px-3 text-sm text-foreground placeholder:text-foreground/35 focus:border-accent"
                 placeholder="Nome do projeto"
                 required
               />
             </label>
 
             <label className="flex flex-col gap-2">
-              <span className="text-sm font-medium text-white/80">Descrição</span>
+              <span className="text-sm font-medium text-foreground/80">Descrição</span>
               <textarea
                 value={description}
                 onChange={(event) => setDescription(event.target.value)}
-                className="min-h-28 resize-none rounded-lg border border-white/10 bg-white/5 px-3 py-3 text-sm leading-6 text-white outline-none transition-colors placeholder:text-white/35 focus:border-accent"
+                className="min-h-28 resize-none rounded-lg border border-foreground/10 bg-foreground/5 px-3 py-3 text-sm leading-6 text-foreground outline-none transition-colors placeholder:text-foreground/35 focus:border-accent"
                 placeholder="Descrição do projeto"
               />
             </label>
 
             {createProject.isError ? (
-              <p className="rounded-lg border border-red-300/15 bg-red-300/10 px-3 py-2 text-sm text-red-200">
+              <p className="rounded-lg border border-destructive/20 bg-destructive/10 px-3 py-2 text-sm text-destructive">
                 {createProject.error.message}
               </p>
             ) : null}

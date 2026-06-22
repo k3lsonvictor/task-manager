@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { InputField } from '@/components/ui/input-field';
+import { Input } from '@/components/ui/input';
 import { ApiError } from '@/lib/api/api';
 import {
   useCreateUser,
@@ -158,10 +158,10 @@ export function AuthForm({ mode }: Props) {
 
   return (
     <main className="flex min-h-dvh w-full items-center justify-center bg-auth-bg">
-      <div className="flex w-full max-w-md flex-col gap-2 px-6 text-white">
+      <div className="flex w-full max-w-md flex-col gap-2 px-6 text-foreground">
         <div className="mb-6 flex w-full flex-col items-center gap-6">
           <h1 className="text-2xl font-semibold tracking-wide">TASK MANAGER</h1>
-          <p className="text-white/80">
+          <p className="text-foreground/80">
             {mode === 'login'
               ? 'Faça login aqui.'
               : isSigninVerification
@@ -173,15 +173,19 @@ export function AuthForm({ mode }: Props) {
         <form onSubmit={onSubmit} className="flex w-full flex-col gap-2">
           {isSigninVerification ? (
             <>
-              <InputField
-                label="Email"
+              <label className="flex flex-col gap-2">
+                <span className="text-sm font-medium text-foreground/80">Email</span>
+                <Input
                 name="email"
                 type="email"
                 value={pendingAccount?.email ?? ''}
                 readOnly
-              />
-              <InputField
-                label="Código de verificação"
+                className="h-11 rounded-lg border border-foreground/10 bg-foreground/5 px-3 text-sm text-foreground placeholder:text-foreground/35 focus:border-accent"
+                />
+              </label>
+              <label className="flex flex-col gap-2">
+                <span className="text-sm font-medium text-foreground/80">Código de verificação</span>
+                <Input
                 name="verificationCode"
                 inputMode="numeric"
                 autoComplete="one-time-code"
@@ -189,34 +193,45 @@ export function AuthForm({ mode }: Props) {
                 required
                 minLength={4}
                 maxLength={8}
-              />
+                className="h-11 rounded-lg border border-foreground/10 bg-foreground/5 px-3 text-sm text-foreground placeholder:text-foreground/35 focus:border-accent"
+                />
+              </label>
             </>
           ) : (
             <>
               {mode === 'signin' ? (
-                <InputField
-                  label="Nome"
+                <label className="flex flex-col gap-2">
+                  <span className="text-sm font-medium text-foreground/80">Nome</span>
+                  <Input
                   name="name"
                   placeholder="Digite seu nome"
                   required
                   minLength={3}
-                />
+                    className="h-11 rounded-lg border border-foreground/10 bg-foreground/5 px-3 text-sm text-foreground placeholder:text-foreground/35 focus:border-accent"
+                  />
+                </label>
               ) : null}
-              <InputField
-                label="Email"
+              <label className="flex flex-col gap-2">
+                <span className="text-sm font-medium text-foreground/80">Email</span>
+                <Input
                 name="email"
                 type="email"
                 placeholder="Digite seu e-mail"
                 required
-              />
-              <InputField
-                label="Senha"
+                className="h-11 rounded-lg border border-foreground/10 bg-foreground/5 px-3 text-sm text-foreground placeholder:text-foreground/35 focus:border-accent"
+                />
+              </label>
+              <label className="flex flex-col gap-2">
+                <span className="text-sm font-medium text-foreground/80">Senha</span>
+                <Input
                 name="password"
                 type="password"
                 placeholder="Digite sua senha"
                 required
                 minLength={6}
-              />
+                className="h-11 rounded-lg border border-foreground/10 bg-foreground/5 px-3 text-sm text-foreground placeholder:text-foreground/35 focus:border-accent"
+                />
+              </label>
             </>
           )}
           <div className="mt-2.5">
@@ -231,18 +246,19 @@ export function AuthForm({ mode }: Props) {
             </Button>
           </div>
           {signinMessage ? (
-            <p className="text-center text-sm text-white/70">{signinMessage}</p>
+            <p className="text-center text-sm text-foreground/70">{signinMessage}</p>
           ) : null}
           {authError ? (
-            <p className="text-center text-sm text-red-300">{authError.message}</p>
+            <p className="text-center text-sm text-destructive">{authError.message}</p>
           ) : null}
         </form>
 
         {isSigninVerification ? (
           <div className="mt-2 flex flex-col items-center gap-2">
-            <button
+            <Button
               type="button"
-              className="cursor-pointer border-none bg-transparent text-center text-sm text-white/70 hover:text-white disabled:cursor-not-allowed disabled:opacity-60"
+              variant="link"
+              className="h-auto p-0 text-sm text-muted-foreground hover:text-foreground"
               disabled={!pendingAccount || resendVerificationEmailMutation.isPending}
               onClick={() => {
                 if (!pendingAccount) return;
@@ -259,25 +275,25 @@ export function AuthForm({ mode }: Props) {
               }}
             >
               {resendVerificationEmailMutation.isPending ? 'Reenviando...' : 'Reenviar código'}
-            </button>
-            <button
+            </Button>
+            <Button
               type="button"
-              className="cursor-pointer border-none bg-transparent text-center text-sm text-white/70 hover:text-white"
+              variant="link"
+              className="h-auto p-0 text-sm text-muted-foreground hover:text-foreground"
               onClick={() => {
                 setSigninStep('account');
                 setSigninMessage(null);
               }}
             >
               Alterar email
-            </button>
+            </Button>
           </div>
         ) : (
-          <Link
-            href={mode === 'login' ? '/signin' : '/login'}
-            className="mt-2 cursor-pointer border-none bg-transparent text-center text-sm text-white/70 hover:text-white"
-          >
-            {mode === 'login' ? 'Crie uma conta aqui' : 'Já tenho conta'}
-          </Link>
+          <Button asChild variant="link" className="mt-2 h-auto p-0 text-sm text-muted-foreground hover:text-foreground">
+            <Link href={mode === 'login' ? '/signin' : '/login'}>
+              {mode === 'login' ? 'Crie uma conta aqui' : 'Já tenho conta'}
+            </Link>
+          </Button>
         )}
       </div>
     </main>

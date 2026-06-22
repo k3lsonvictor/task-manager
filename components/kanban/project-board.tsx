@@ -4,8 +4,10 @@ import Link from 'next/link';
 import { useMemo, useState } from 'react';
 import { IconAdd, IconDelete, IconEdit } from '@/components/icons';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import { Modal } from '@/components/ui/modal';
 import { StepColumn } from '@/components/kanban/step-column';
+import { TaskCard } from '@/components/kanban/task-card';
 import type { Step, Task } from '@/lib/api/api';
 import { useProjectEvents } from '@/lib/hooks/use-project-events';
 import { useProject, useUpdateProject } from '@/lib/hooks/use-projects';
@@ -14,11 +16,11 @@ import { useCreateTask, useReorderTasks, useTasks, useUpdateTask } from '@/lib/h
 import { reorderTasksByDrop } from '@/lib/kanban/reorder-tasks';
 import {
   closestCorners,
+  DragOverlay,
   DndContext,
   KeyboardSensor,
   PointerSensor,
   type DragEndEvent,
-  type DragOverEvent,
   type DragStartEvent,
   useSensor,
   useSensors,
@@ -94,8 +96,6 @@ export function ProjectBoard({ projectId }: Props) {
   const [taskDetailsName, setTaskDetailsName] = useState('');
   const [taskDetailsDescription, setTaskDetailsDescription] = useState('');
   const [taskDetailsStepId, setTaskDetailsStepId] = useState('');
-  const [previewTasks, setPreviewTasks] = useState<Task[] | null>(null);
-  const visibleTasks = previewTasks ?? tasks;
   const orderedSteps = useMemo(
     () => [...steps].sort((firstStep, secondStep) => (
       (firstStep.position ?? 0) - (secondStep.position ?? 0)
@@ -115,7 +115,7 @@ export function ProjectBoard({ projectId }: Props) {
   const tasksByStep = useMemo(() => {
     const groupedTasks = new Map<string, Task[]>();
 
-    for (const task of visibleTasks) {
+    for (const task of tasks) {
       if (!task.stepId) continue;
 
       const stepTasks = groupedTasks.get(task.stepId) ?? [];
@@ -130,10 +130,14 @@ export function ProjectBoard({ projectId }: Props) {
     }
 
     return groupedTasks;
-  }, [visibleTasks]);
+  }, [tasks]);
   const selectedTask = useMemo(
-    () => visibleTasks.find((task) => task.id === selectedTaskId) ?? null,
-    [selectedTaskId, visibleTasks]
+    () => tasks.find((task) => task.id === selectedTaskId) ?? null,
+    [selectedTaskId, tasks]
+  );
+  const draggedTask = useMemo(
+    () => tasks.find((task) => task.id === draggedTaskId) ?? null,
+    [draggedTaskId, tasks]
   );
   const editingStep = useMemo(
     () => orderedSteps.find((step) => step.id === editingStepId) ?? null,
@@ -156,7 +160,6 @@ export function ProjectBoard({ projectId }: Props) {
 
   function openCreateStepModal() {
     setStepName('');
-    createStep.reset();
     setCreatingStep(true);
   }
 
@@ -391,11 +394,10 @@ export function ProjectBoard({ projectId }: Props) {
       draggedTaskId,
       targetStepId,
       targetTaskId,
-      tasks: visibleTasks,
+      tasks,
     });
 
     setDraggedTaskId(null);
-    setPreviewTasks(null);
 
     if (nextTasks) {
       const changedTasks = getChangedTaskPlacements(tasks, nextTasks);
@@ -408,26 +410,6 @@ export function ProjectBoard({ projectId }: Props) {
 
   function onDragStart(event: DragStartEvent) {
     setDraggedTaskId(String(event.active.id));
-    setPreviewTasks(tasks);
-  }
-
-  function onDragOver(event: DragOverEvent) {
-    const activeTaskId = String(event.active.id);
-    const target = getDropTarget(event);
-
-    if (!target) return;
-
-    setPreviewTasks((currentPreviewTasks) => {
-      const currentTasks = currentPreviewTasks ?? tasks;
-      const nextTasks = reorderTasksByDrop({
-        draggedTaskId: activeTaskId,
-        targetStepId: target.stepId,
-        targetTaskId: target.taskId,
-        tasks: currentTasks,
-      });
-
-      return nextTasks ?? currentPreviewTasks;
-    });
   }
 
   function onDragEnd(event: DragEndEvent) {
@@ -436,23 +418,7 @@ export function ProjectBoard({ projectId }: Props) {
 
     setDraggedTaskId(null);
 
-    if (!target) {
-      setPreviewTasks(null);
-      return;
-    }
-
-    if (previewTasks) {
-      const nextTasks = previewTasks;
-      const changedTasks = getChangedTaskPlacements(tasks, nextTasks);
-
-      setPreviewTasks(null);
-
-      if (changedTasks.length > 0) {
-        reorderTasks.mutate({ changedTasks, nextTasks });
-      }
-
-      return;
-    }
+    if (!target) return;
 
     reorderTask(activeTaskId, target.stepId, target.taskId);
   }
@@ -460,7 +426,7 @@ export function ProjectBoard({ projectId }: Props) {
   if (isPending) {
     return (
       <main className="flex h-full w-full items-center justify-center p-[30px]">
-        <p className="text-white/60">Carregando projeto...</p>
+        <p className="text-foreground/60">Carregando projeto...</p>
       </main>
     );
   }
@@ -468,8 +434,8 @@ export function ProjectBoard({ projectId }: Props) {
   if (isError || !project) {
     return (
       <main className="flex h-full w-full flex-col items-center justify-center gap-4 p-[30px]">
-        <p className="text-center text-white/80">Projeto não encontrado ou API indisponível.</p>
-        <Link href="/tasks" className="text-accent hover:underline">
+        <p className="text-center text-foreground/80">Projeto não encontrado ou API indisponível.</p>
+        <Link href="/tasks" className="text-primary hover:underline">
           ← Voltar para projetos
         </Link>
       </main>
@@ -478,37 +444,39 @@ export function ProjectBoard({ projectId }: Props) {
 
   return (
     <main className="flex h-full w-full flex-col gap-6 p-6">
-      <header className="flex flex-col gap-5 border-b border-white/10 pb-6">
-        <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
-          <div className="min-w-0">
-            <p className="mb-2 text-xs font-medium uppercase tracking-[0.18em] text-muted">
+      <header className="flex flex-col gap-5 border-b border-foreground/10 pb-6">
+        <div className="flex gap-4 md:flex-row md:items-start md:justify-between">
+          <div className="w-auto">
+            <p className="w-max mb-2 text-xs font-medium uppercase tracking-[0.18em] text-muted-foreground">
               Projeto
             </p>
-            <h1 className="text-3xl font-semibold text-white">{project.name}</h1>
+            <h1 className="w-max text-3xl font-semibold text-foreground">{project.name}</h1>
             {project.description ? (
-              <p className="mt-2 max-w-2xl text-sm leading-6 text-white/60">
+              <p className="mt-2 max-w-2xl text-sm leading-6 text-foreground/60">
                 {project.description}
               </p>
             ) : (
-              <p className="mt-2 text-sm text-white/45">Sem descrição adicionada.</p>
+              <p className="mt-2 text-sm text-foreground/45">Sem descrição adicionada.</p>
             )}
           </div>
 
-          <button
+          <Button
             type="button"
-            className="flex h-10 w-10 shrink-0 cursor-pointer items-center justify-center rounded-lg border border-white/10 bg-white/5 text-white/70 transition-colors hover:bg-white/10 hover:text-white"
+            variant="ghost"
+            size="sm"
+            className="!w-auto shrink-0 rounded-lg border border-border bg-background/50 text-foreground/70 hover:bg-accent hover:text-accent-foreground"
             aria-label="Editar projeto"
             onClick={openEditModal}
           >
             <IconEdit className="h-4 w-4" />
-          </button>
+          </Button>
         </div>
 
-        {/* <div className="flex flex-wrap items-center gap-2 text-sm text-white/55">
-          <span className="rounded-md bg-white/5 px-3 py-1.5">Tags</span>
+        {/* <div className="flex flex-wrap items-center gap-2 text-sm text-foreground/55">
+          <span className="rounded-md bg-foreground/5 px-3 py-1.5">Tags</span>
           <button
             type="button"
-            className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg border border-dashed border-white/20 text-white/60 transition-colors hover:border-accent hover:text-white"
+            className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg border border-dashed border-foreground/20 text-foreground/60 transition-colors hover:border-accent hover:text-foreground"
             aria-label="Adicionar tag"
           >
             <IconAdd className="h-4 w-4" />
@@ -518,13 +486,13 @@ export function ProjectBoard({ projectId }: Props) {
 
       <div className="flex items-center justify-between gap-4">
         <div>
-          <h2 className="text-base font-semibold text-white">Etapas</h2>
-          <p className="text-sm text-white/45">Organize as tarefas do projeto por status.</p>
+          <h2 className="text-base font-semibold text-foreground">Etapas</h2>
+          <p className="text-sm text-foreground/45">Organize as tarefas do projeto por status.</p>
         </div>
 
         <Button
           fullWidth={false}
-          className="!w-auto rounded-lg px-4 text-sm"
+          className="w-auto rounded-lg px-4 text-sm"
           onClick={openCreateStepModal}
         >
           <span className="flex items-center justify-center gap-2">
@@ -537,7 +505,7 @@ export function ProjectBoard({ projectId }: Props) {
       <div className="scrollbar-thin flex min-h-0 flex-1 gap-3 overflow-x-auto pb-2">
         {isStepsPending || isTasksPending ? (
           <div className="flex min-h-[320px] w-full items-center justify-center">
-            <p className="text-sm text-white/55">Carregando etapas...</p>
+            <p className="text-sm text-foreground/55">Carregando etapas...</p>
           </div>
         ) : isStepsError || isTasksError ? (
           <div className="flex min-h-[320px] w-full items-center justify-center rounded-lg border border-amber-300/15 bg-amber-300/10 px-6 text-center">
@@ -550,11 +518,9 @@ export function ProjectBoard({ projectId }: Props) {
             collisionDetection={closestCorners}
             sensors={sensors}
             onDragStart={onDragStart}
-            onDragOver={onDragOver}
             onDragEnd={onDragEnd}
             onDragCancel={() => {
               setDraggedTaskId(null);
-              setPreviewTasks(null);
             }}
           >
             {orderedSteps.map((step) => {
@@ -573,15 +539,26 @@ export function ProjectBoard({ projectId }: Props) {
                 />
               );
             })}
+            <DragOverlay>
+              {draggedTask ? (
+                <div className="w-[260px] cursor-grabbing shadow-xl">
+                  <TaskCard
+                    name={draggedTask.name}
+                    description={draggedTask.description}
+                    position={draggedTask.position}
+                  />
+                </div>
+              ) : null}
+            </DragOverlay>
           </DndContext>
         ) : (
-          <div className="flex min-h-[320px] w-full items-center justify-center rounded-lg border border-dashed border-white/10 bg-white/[0.03]">
+          <div className="flex min-h-[320px] w-full items-center justify-center rounded-lg border border-dashed border-foreground/10 bg-foreground/[0.03]">
             <div className="flex max-w-sm flex-col items-center px-6 text-center">
-              <span className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-white/5 text-white/70">
+              <span className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-foreground/5 text-foreground/70">
                 <IconAdd className="h-5 w-5" />
               </span>
-              <h3 className="text-base font-semibold text-white">Nenhuma etapa criada</h3>
-              <p className="mt-2 text-sm leading-6 text-white/50">
+              <h3 className="text-base font-semibold text-foreground">Nenhuma etapa criada</h3>
+              <p className="mt-2 text-sm leading-6 text-foreground/50">
                 Crie a primeira etapa para começar a distribuir as tarefas deste projeto.
               </p>
             </div>
@@ -600,22 +577,22 @@ export function ProjectBoard({ projectId }: Props) {
         <form onSubmit={onEditSubmit}>
           <div className="flex flex-col gap-4">
             <label className="flex flex-col gap-2">
-              <span className="text-sm font-medium text-white/80">Nome</span>
-              <input
+              <span className="text-sm font-medium text-foreground/80">Nome</span>
+              <Input
                 value={name}
                 onChange={(event) => setName(event.target.value)}
-                className="h-11 rounded-lg border border-white/10 bg-white/5 px-3 text-sm text-white outline-none transition-colors placeholder:text-white/35 focus:border-accent"
+                className="h-11 rounded-lg border border-foreground/10 bg-foreground/5 px-3 text-sm text-foreground placeholder:text-foreground/35 focus:border-accent"
                 placeholder="Nome do projeto"
                 required
               />
             </label>
 
             <label className="flex flex-col gap-2">
-              <span className="text-sm font-medium text-white/80">Descrição</span>
+              <span className="text-sm font-medium text-foreground/80">Descrição</span>
               <textarea
                 value={description}
                 onChange={(event) => setDescription(event.target.value)}
-                className="min-h-28 resize-none rounded-lg border border-white/10 bg-white/5 px-3 py-3 text-sm leading-6 text-white outline-none transition-colors placeholder:text-white/35 focus:border-accent"
+                className="min-h-28 resize-none rounded-lg border border-foreground/10 bg-foreground/5 px-3 py-3 text-sm leading-6 text-foreground outline-none transition-colors placeholder:text-foreground/35 focus:border-accent"
                 placeholder="Descrição do projeto"
               />
             </label>
@@ -641,7 +618,7 @@ export function ProjectBoard({ projectId }: Props) {
             <Button
               type="submit"
               fullWidth={false}
-              className="!w-auto rounded-lg px-4 text-sm"
+              className="w-auto rounded-lg px-4 text-sm"
               disabled={updateProject.isPending || !name.trim()}
             >
               {updateProject.isPending ? 'Salvando...' : 'Concluir'}
@@ -661,11 +638,11 @@ export function ProjectBoard({ projectId }: Props) {
         <form onSubmit={onCreateStepSubmit}>
           <div className="flex flex-col gap-4">
             <label className="flex flex-col gap-2">
-              <span className="text-sm font-medium text-white/80">Nome da coluna</span>
-              <input
+              <span className="text-sm font-medium text-foreground/80">Nome da coluna</span>
+              <Input
                 value={stepName}
                 onChange={(event) => setStepName(event.target.value)}
-                className="h-11 rounded-lg border border-white/10 bg-white/5 px-3 text-sm text-white outline-none transition-colors placeholder:text-white/35 focus:border-accent"
+                className="h-11 rounded-lg border border-foreground/10 bg-foreground/5 px-3 text-sm text-foreground placeholder:text-foreground/35 focus:border-accent"
                 placeholder="Ex: Em andamento"
                 required
               />
@@ -692,7 +669,7 @@ export function ProjectBoard({ projectId }: Props) {
             <Button
               type="submit"
               fullWidth={false}
-              className="!w-auto rounded-lg px-4 text-sm"
+              className="w-auto rounded-lg px-4 text-sm"
               disabled={createStep.isPending || !stepName.trim()}
             >
               {createStep.isPending ? 'Criando...' : 'Criar etapa'}
@@ -712,22 +689,22 @@ export function ProjectBoard({ projectId }: Props) {
         <form onSubmit={onCreateTaskSubmit}>
           <div className="flex flex-col gap-4">
             <label className="flex flex-col gap-2">
-              <span className="text-sm font-medium text-white/80">Título</span>
-              <input
+              <span className="text-sm font-medium text-foreground/80">Título</span>
+              <Input
                 value={taskName}
                 onChange={(event) => setTaskName(event.target.value)}
-                className="h-11 rounded-lg border border-white/10 bg-white/5 px-3 text-sm text-white outline-none transition-colors placeholder:text-white/35 focus:border-accent"
+                className="h-11 rounded-lg border border-foreground/10 bg-foreground/5 px-3 text-sm text-foreground placeholder:text-foreground/35 focus:border-accent"
                 placeholder="Nome da tarefa"
                 required
               />
             </label>
 
             <label className="flex flex-col gap-2">
-              <span className="text-sm font-medium text-white/80">Descrição</span>
+              <span className="text-sm font-medium text-foreground/80">Descrição</span>
               <textarea
                 value={taskDescription}
                 onChange={(event) => setTaskDescription(event.target.value)}
-                className="min-h-24 resize-none rounded-lg border border-white/10 bg-white/5 px-3 py-3 text-sm leading-6 text-white outline-none transition-colors placeholder:text-white/35 focus:border-accent"
+                className="min-h-24 resize-none rounded-lg border border-foreground/10 bg-foreground/5 px-3 py-3 text-sm leading-6 text-foreground outline-none transition-colors placeholder:text-foreground/35 focus:border-accent"
                 placeholder="Detalhes da tarefa"
               />
             </label>
@@ -753,7 +730,7 @@ export function ProjectBoard({ projectId }: Props) {
             <Button
               type="submit"
               fullWidth={false}
-              className="!w-auto rounded-lg px-4 text-sm"
+              className="w-auto rounded-lg px-4 text-sm"
               disabled={createTask.isPending || !taskName.trim()}
             >
               {createTask.isPending ? 'Criando...' : 'Criar tarefa'}
@@ -773,26 +750,26 @@ export function ProjectBoard({ projectId }: Props) {
         <form onSubmit={onEditStepSubmit}>
           <div className="flex flex-col gap-4">
             <label className="flex flex-col gap-2">
-              <span className="text-sm font-medium text-white/80">Nome da coluna</span>
-              <input
+              <span className="text-sm font-medium text-foreground/80">Nome da coluna</span>
+              <Input
                 value={stepDetailsName}
                 onChange={(event) => setStepDetailsName(event.target.value)}
-                className="h-11 rounded-lg border border-white/10 bg-white/5 px-3 text-sm text-white outline-none transition-colors placeholder:text-white/35 focus:border-accent"
+                className="h-11 rounded-lg border border-foreground/10 bg-foreground/5 px-3 text-sm text-foreground placeholder:text-foreground/35 focus:border-accent"
                 placeholder="Ex: Em andamento"
                 required
               />
             </label>
 
             <label className="flex flex-col gap-2">
-              <span className="text-sm font-medium text-white/80">Posição</span>
+              <span className="text-sm font-medium text-foreground/80">Posição</span>
               <select
                 value={stepDetailsPosition}
                 onChange={(event) => setStepDetailsPosition(event.target.value)}
-                className="h-11 rounded-lg border border-white/10 bg-white/5 px-3 text-sm text-white outline-none transition-colors focus:border-accent"
+                className="h-11 rounded-lg border border-foreground/10 bg-foreground/5 px-3 text-sm text-foreground outline-none transition-colors focus:border-accent"
                 required
               >
                 {orderedSteps.map((step, index) => (
-                  <option key={step.id} value={index + 1} className="bg-app-bg text-white">
+                  <option key={step.id} value={index + 1} className="bg-app-bg text-foreground">
                     {index + 1}
                   </option>
                 ))}
@@ -824,9 +801,8 @@ export function ProjectBoard({ projectId }: Props) {
               type="button"
               variant="ghost"
               fullWidth={false}
-              className={`rounded-lg px-4 text-sm ${
-                confirmingDeleteStep ? '!text-red-200 !hover:text-red-100' : '!text-red-300 !hover:text-red-200'
-              }`}
+              className={`rounded-lg px-4 text-sm ${confirmingDeleteStep ? '!text-red-200 !hover:text-red-100' : '!text-red-300 !hover:text-red-200'
+                }`}
               onClick={onDeleteStep}
               disabled={updateSteps.isPending || deleteStep.isPending}
             >
@@ -854,7 +830,7 @@ export function ProjectBoard({ projectId }: Props) {
               <Button
                 type="submit"
                 fullWidth={false}
-                className="!w-auto rounded-lg px-4 text-sm"
+                className="w-auto rounded-lg px-4 text-sm"
                 disabled={updateSteps.isPending || deleteStep.isPending || !stepDetailsName.trim()}
               >
                 {updateSteps.isPending ? 'Salvando...' : 'Salvar alterações'}
@@ -876,57 +852,57 @@ export function ProjectBoard({ projectId }: Props) {
         <form onSubmit={onTaskDetailsSubmit}>
           <div className="flex flex-col gap-4">
             <label className="flex flex-col gap-2">
-              <span className="text-sm font-medium text-white/80">Título</span>
-              <input
+              <span className="text-sm font-medium text-foreground/80">Título</span>
+              <Input
                 value={taskDetailsName}
                 onChange={(event) => setTaskDetailsName(event.target.value)}
-                className="h-11 rounded-lg border border-white/10 bg-white/5 px-3 text-sm text-white outline-none transition-colors placeholder:text-white/35 focus:border-accent"
+                className="h-11 rounded-lg border border-foreground/10 bg-foreground/5 px-3 text-sm text-foreground placeholder:text-foreground/35 focus:border-accent"
                 placeholder="Nome da tarefa"
                 required
               />
             </label>
 
             <label className="flex flex-col gap-2">
-              <span className="text-sm font-medium text-white/80">Descrição</span>
+              <span className="text-sm font-medium text-foreground/80">Descrição</span>
               <textarea
                 value={taskDetailsDescription}
                 onChange={(event) => setTaskDetailsDescription(event.target.value)}
-                className="min-h-28 resize-none rounded-lg border border-white/10 bg-white/5 px-3 py-3 text-sm leading-6 text-white outline-none transition-colors placeholder:text-white/35 focus:border-accent"
+                className="min-h-28 resize-none rounded-lg border border-foreground/10 bg-foreground/5 px-3 py-3 text-sm leading-6 text-foreground outline-none transition-colors placeholder:text-foreground/35 focus:border-accent"
                 placeholder="Detalhes da tarefa"
               />
             </label>
 
             <label className="flex flex-col gap-2">
-              <span className="text-sm font-medium text-white/80">Etapa</span>
+              <span className="text-sm font-medium text-foreground/80">Etapa</span>
               <div className='relative'>
-              <select
-                value={taskDetailsStepId}
-                onChange={(event) => setTaskDetailsStepId(event.target.value)}
-                className="h-11 w-full appearance-none rounded-lg border border-white/10 bg-white/5 px-3 pr-10 text-sm text-white"
-                required
-              >
-                {steps.map((step) => (
-                  <option key={step.id} value={step.id} className="bg-app-bg text-white">
-                    {step.name}
-                  </option>
-                ))}
-              </select>
-              <ChevronDown
-                className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-white/70"
-              />
+                <select
+                  value={taskDetailsStepId}
+                  onChange={(event) => setTaskDetailsStepId(event.target.value)}
+                  className="h-11 w-full appearance-none rounded-lg border border-foreground/10 bg-foreground/5 px-3 pr-10 text-sm text-foreground"
+                  required
+                >
+                  {steps.map((step) => (
+                    <option key={step.id} value={step.id} className="bg-app-bg text-foreground">
+                      {step.name}
+                    </option>
+                  ))}
+                </select>
+                <ChevronDown
+                  className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-foreground/70"
+                />
               </div>
             </label>
 
             {/* {selectedTask ? (
-              <div className="grid gap-3 rounded-lg border border-white/10 bg-white/[0.03] p-3 text-sm text-white/60 sm:grid-cols-2">
+              <div className="grid gap-3 rounded-lg border border-foreground/10 bg-foreground/[0.03] p-3 text-sm text-foreground/60 sm:grid-cols-2">
                 <p>
-                  <span className="block text-xs uppercase tracking-[0.14em] text-white/35">
+                  <span className="block text-xs uppercase tracking-[0.14em] text-foreground/35">
                     Posição
                   </span>
                   #{selectedTask.position + 1}
                 </p>
                 <p>
-                  <span className="block text-xs uppercase tracking-[0.14em] text-white/35">
+                  <span className="block text-xs uppercase tracking-[0.14em] text-foreground/35">
                     ID
                   </span>
                   <span className="break-all">{selectedTask.id}</span>
@@ -955,7 +931,7 @@ export function ProjectBoard({ projectId }: Props) {
             <Button
               type="submit"
               fullWidth={false}
-              className="!w-auto rounded-lg px-4 text-sm"
+              className="w-auto rounded-lg px-4 text-sm"
               disabled={updateTask.isPending || !taskDetailsName.trim() || !taskDetailsStepId}
             >
               {updateTask.isPending ? 'Salvando...' : 'Salvar alterações'}
