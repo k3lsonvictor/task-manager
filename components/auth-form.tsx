@@ -176,24 +176,24 @@ export function AuthForm({ mode }: Props) {
               <label className="flex flex-col gap-2">
                 <span className="text-sm font-medium text-foreground/80">Email</span>
                 <Input
-                name="email"
-                type="email"
-                value={pendingAccount?.email ?? ''}
-                readOnly
-                className="h-11 rounded-lg border border-foreground/10 bg-foreground/5 px-3 text-sm text-foreground placeholder:text-foreground/35 focus:border-accent"
+                  name="email"
+                  type="email"
+                  value={pendingAccount?.email ?? ''}
+                  readOnly
+                  className="h-11 rounded-lg border border-foreground/10 bg-foreground/5 px-3 text-sm text-foreground placeholder:text-foreground/35 focus:border-accent"
                 />
               </label>
               <label className="flex flex-col gap-2">
                 <span className="text-sm font-medium text-foreground/80">Código de verificação</span>
                 <Input
-                name="verificationCode"
-                inputMode="numeric"
-                autoComplete="one-time-code"
-                placeholder="Digite o código recebido"
-                required
-                minLength={4}
-                maxLength={8}
-                className="h-11 rounded-lg border border-foreground/10 bg-foreground/5 px-3 text-sm text-foreground placeholder:text-foreground/35 focus:border-accent"
+                  name="verificationCode"
+                  inputMode="numeric"
+                  autoComplete="one-time-code"
+                  placeholder="Digite o código recebido"
+                  required
+                  minLength={4}
+                  maxLength={8}
+                  className="h-11 rounded-lg border border-foreground/10 bg-foreground/5 px-3 text-sm text-foreground placeholder:text-foreground/35 focus:border-accent"
                 />
               </label>
             </>
@@ -203,10 +203,10 @@ export function AuthForm({ mode }: Props) {
                 <label className="flex flex-col gap-2">
                   <span className="text-sm font-medium text-foreground/80">Nome</span>
                   <Input
-                  name="name"
-                  placeholder="Digite seu nome"
-                  required
-                  minLength={3}
+                    name="name"
+                    placeholder="Digite seu nome"
+                    required
+                    minLength={3}
                     className="h-11 rounded-lg border border-foreground/10 bg-foreground/5 px-3 text-sm text-foreground placeholder:text-foreground/35 focus:border-accent"
                   />
                 </label>
@@ -214,22 +214,22 @@ export function AuthForm({ mode }: Props) {
               <label className="flex flex-col gap-2">
                 <span className="text-sm font-medium text-foreground/80">Email</span>
                 <Input
-                name="email"
-                type="email"
-                placeholder="Digite seu e-mail"
-                required
-                className="h-11 rounded-lg border border-foreground/10 bg-foreground/5 px-3 text-sm text-foreground placeholder:text-foreground/35 focus:border-accent"
+                  name="email"
+                  type="email"
+                  placeholder="Digite seu e-mail"
+                  required
+                  className="h-11 rounded-lg border border-foreground/10 bg-foreground/5 px-3 text-sm text-foreground placeholder:text-foreground/35 focus:border-accent"
                 />
               </label>
               <label className="flex flex-col gap-2">
                 <span className="text-sm font-medium text-foreground/80">Senha</span>
                 <Input
-                name="password"
-                type="password"
-                placeholder="Digite sua senha"
-                required
-                minLength={6}
-                className="h-11 rounded-lg border border-foreground/10 bg-foreground/5 px-3 text-sm text-foreground placeholder:text-foreground/35 focus:border-accent"
+                  name="password"
+                  type="password"
+                  placeholder="Digite sua senha"
+                  required
+                  minLength={6}
+                  className="h-11 rounded-lg border border-foreground/10 bg-foreground/5 px-3 text-sm text-foreground placeholder:text-foreground/35 focus:border-accent"
                 />
               </label>
             </>
@@ -249,7 +249,15 @@ export function AuthForm({ mode }: Props) {
             <p className="text-center text-sm text-foreground/70">{signinMessage}</p>
           ) : null}
           {authError ? (
-            <p className="text-center text-sm text-destructive">{authError.message}</p>
+            <p className="text-center text-sm text-destructive">
+              {authError ? (
+                <p className="text-center text-sm text-destructive">
+                  {authError instanceof ApiError && authError.status === 401
+                    ? 'Email ou senha incorretos.'
+                    : authError.message}
+                </p>
+              ) : null}
+            </p>
           ) : null}
         </form>
 
