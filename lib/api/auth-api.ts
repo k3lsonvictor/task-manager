@@ -19,6 +19,17 @@ export type AuthTokens = {
   refreshToken?: string;
 };
 
+type RefreshSessionEntry = {
+  expiresAt: number;
+  promise: Promise<AuthTokens>;
+};
+
+const REFRESH_SESSION_DEDUPLICATION_MS = 5_000;
+const globalRefreshState = globalThis as typeof globalThis & {
+  taskManagerRefreshSessions?: Map<string, RefreshSessionEntry>;
+};
+const refreshSessions = globalRefreshState.taskManagerRefreshSessions ??= new Map();
+
 function getSetCookieHeaders(response: Response): string[] {
   const headers = response.headers as Headers & { getSetCookie?: () => string[] };
   const setCookieHeaders = headers.getSetCookie?.();
@@ -151,7 +162,7 @@ export async function loginWithTokens(dto: LoginDto): Promise<{
   };
 }
 
-export async function refreshSession(refreshToken: string): Promise<AuthTokens> {
+async function requestSessionRefresh(refreshToken: string): Promise<AuthTokens> {
   const response = await fetchWithTimeout('auth/refresh', {
     method: 'POST',
     headers: {
@@ -165,6 +176,43 @@ export async function refreshSession(refreshToken: string): Promise<AuthTokens> 
   }
 
   return getTokensFromAuthResponse(response, data);
+}
+
+export function refreshSession(refreshToken: string): Promise<AuthTokens> {
+  const currentRefresh = refreshSessions.get(refreshToken);
+
+  if (currentRefresh && currentRefresh.expiresAt > Date.now()) {
+    return currentRefresh.promise;
+  }
+
+  const entry: RefreshSessionEntry = {
+    expiresAt: Number.POSITIVE_INFINITY,
+    promise: Promise.resolve({}),
+  };
+
+  entry.promise = requestSessionRefresh(refreshToken).then(
+    (tokens) => {
+      entry.expiresAt = Date.now() + REFRESH_SESSION_DEDUPLICATION_MS;
+      setTimeout(() => {
+        if (refreshSessions.get(refreshToken) === entry) {
+          refreshSessions.delete(refreshToken);
+        }
+      }, REFRESH_SESSION_DEDUPLICATION_MS);
+
+      return tokens;
+    },
+    (error) => {
+      if (refreshSessions.get(refreshToken) === entry) {
+        refreshSessions.delete(refreshToken);
+      }
+
+      throw error;
+    }
+  );
+
+  refreshSessions.set(refreshToken, entry);
+
+  return entry.promise;
 }
 
 export async function logout(refreshToken?: string | null): Promise<void> {
