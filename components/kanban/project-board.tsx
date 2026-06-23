@@ -4,8 +4,14 @@ import Link from 'next/link';
 import { useMemo, useState } from 'react';
 import { IconAdd, IconDelete, IconEdit } from '@/components/icons';
 import { Button } from '@/components/ui/button';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
-import { Modal } from '@/components/ui/modal';
 import { StepColumn } from '@/components/kanban/step-column';
 import { TaskCard } from '@/components/kanban/task-card';
 import type { Step, Task } from '@/lib/api/api';
@@ -566,15 +572,25 @@ export function ProjectBoard({ projectId }: Props) {
         )}
       </div>
 
-      <Modal
+      <Dialog
         open={editing}
-        title="Detalhes do projeto"
-        description="Editar projeto"
-        onClose={closeEditModal}
-        closeOnBackdrop={!updateProject.isPending}
-        closeOnEscape={!updateProject.isPending}
+        onOpenChange={(open) => {
+          if (!open && !updateProject.isPending) closeEditModal();
+        }}
       >
-        <form onSubmit={onEditSubmit}>
+        <DialogContent
+          className="bg-app-bg p-5 sm:max-w-md"
+          showCloseButton={!updateProject.isPending}
+          onEscapeKeyDown={(event) => updateProject.isPending && event.preventDefault()}
+          onPointerDownOutside={(event) => updateProject.isPending && event.preventDefault()}
+        >
+          <DialogHeader className="mb-1 gap-2">
+            <DialogDescription className="text-xs font-medium uppercase tracking-[0.18em]">
+              Editar projeto
+            </DialogDescription>
+            <DialogTitle className="text-xl font-semibold">Detalhes do projeto</DialogTitle>
+          </DialogHeader>
+          <form onSubmit={onEditSubmit}>
           <div className="flex flex-col gap-4">
             <label className="flex flex-col gap-2">
               <span className="text-sm font-medium text-foreground/80">Nome</span>
@@ -624,18 +640,29 @@ export function ProjectBoard({ projectId }: Props) {
               {updateProject.isPending ? 'Salvando...' : 'Concluir'}
             </Button>
           </div>
-        </form>
-      </Modal>
+          </form>
+        </DialogContent>
+      </Dialog>
 
-      <Modal
+      <Dialog
         open={creatingStep}
-        title="Nova etapa"
-        description="Criar coluna"
-        onClose={closeCreateStepModal}
-        closeOnBackdrop={!createStep.isPending}
-        closeOnEscape={!createStep.isPending}
+        onOpenChange={(open) => {
+          if (!open && !createStep.isPending) closeCreateStepModal();
+        }}
       >
-        <form onSubmit={onCreateStepSubmit}>
+        <DialogContent
+          className="bg-app-bg p-5 sm:max-w-md"
+          showCloseButton={!createStep.isPending}
+          onEscapeKeyDown={(event) => createStep.isPending && event.preventDefault()}
+          onPointerDownOutside={(event) => createStep.isPending && event.preventDefault()}
+        >
+          <DialogHeader className="mb-1 gap-2">
+            <DialogDescription className="text-xs font-medium uppercase tracking-[0.18em]">
+              Criar coluna
+            </DialogDescription>
+            <DialogTitle className="text-xl font-semibold">Nova etapa</DialogTitle>
+          </DialogHeader>
+          <form onSubmit={onCreateStepSubmit}>
           <div className="flex flex-col gap-4">
             <label className="flex flex-col gap-2">
               <span className="text-sm font-medium text-foreground/80">Nome da coluna</span>
@@ -675,18 +702,29 @@ export function ProjectBoard({ projectId }: Props) {
               {createStep.isPending ? 'Criando...' : 'Criar etapa'}
             </Button>
           </div>
-        </form>
-      </Modal>
+          </form>
+        </DialogContent>
+      </Dialog>
 
-      <Modal
+      <Dialog
         open={Boolean(creatingTaskStepId)}
-        title="Nova tarefa"
-        description="Criar task"
-        onClose={closeCreateTaskModal}
-        closeOnBackdrop={!createTask.isPending}
-        closeOnEscape={!createTask.isPending}
+        onOpenChange={(open) => {
+          if (!open && !createTask.isPending) closeCreateTaskModal();
+        }}
       >
-        <form onSubmit={onCreateTaskSubmit}>
+        <DialogContent
+          className="bg-app-bg p-5 sm:max-w-md"
+          showCloseButton={!createTask.isPending}
+          onEscapeKeyDown={(event) => createTask.isPending && event.preventDefault()}
+          onPointerDownOutside={(event) => createTask.isPending && event.preventDefault()}
+        >
+          <DialogHeader className="mb-1 gap-2">
+            <DialogDescription className="text-xs font-medium uppercase tracking-[0.18em]">
+              Criar task
+            </DialogDescription>
+            <DialogTitle className="text-xl font-semibold">Nova tarefa</DialogTitle>
+          </DialogHeader>
+          <form onSubmit={onCreateTaskSubmit}>
           <div className="flex flex-col gap-4">
             <label className="flex flex-col gap-2">
               <span className="text-sm font-medium text-foreground/80">Título</span>
@@ -736,18 +774,33 @@ export function ProjectBoard({ projectId }: Props) {
               {createTask.isPending ? 'Criando...' : 'Criar tarefa'}
             </Button>
           </div>
-        </form>
-      </Modal>
+          </form>
+        </DialogContent>
+      </Dialog>
 
-      <Modal
+      <Dialog
         open={Boolean(editingStep)}
-        title="Detalhes da etapa"
-        description="Editar coluna"
-        onClose={closeEditStepModal}
-        closeOnBackdrop={!updateSteps.isPending && !deleteStep.isPending}
-        closeOnEscape={!updateSteps.isPending && !deleteStep.isPending}
+        onOpenChange={(open) => {
+          if (!open && !updateSteps.isPending && !deleteStep.isPending) closeEditStepModal();
+        }}
       >
-        <form onSubmit={onEditStepSubmit}>
+        <DialogContent
+          className="bg-app-bg p-5 sm:max-w-md"
+          showCloseButton={!updateSteps.isPending && !deleteStep.isPending}
+          onEscapeKeyDown={(event) => {
+            if (updateSteps.isPending || deleteStep.isPending) event.preventDefault();
+          }}
+          onPointerDownOutside={(event) => {
+            if (updateSteps.isPending || deleteStep.isPending) event.preventDefault();
+          }}
+        >
+          <DialogHeader className="mb-1 gap-2">
+            <DialogDescription className="text-xs font-medium uppercase tracking-[0.18em]">
+              Editar coluna
+            </DialogDescription>
+            <DialogTitle className="text-xl font-semibold">Detalhes da etapa</DialogTitle>
+          </DialogHeader>
+          <form onSubmit={onEditStepSubmit}>
           <div className="flex flex-col gap-4">
             <label className="flex flex-col gap-2">
               <span className="text-sm font-medium text-foreground/80">Nome da coluna</span>
@@ -837,19 +890,29 @@ export function ProjectBoard({ projectId }: Props) {
               </Button>
             </div>
           </div>
-        </form>
-      </Modal>
+          </form>
+        </DialogContent>
+      </Dialog>
 
-      <Modal
+      <Dialog
         open={Boolean(selectedTask)}
-        title="Detalhes da tarefa"
-        description="Visualizar e editar"
-        onClose={closeTaskDetailsModal}
-        className="max-w-lg"
-        closeOnBackdrop={!updateTask.isPending}
-        closeOnEscape={!updateTask.isPending}
+        onOpenChange={(open) => {
+          if (!open && !updateTask.isPending) closeTaskDetailsModal();
+        }}
       >
-        <form onSubmit={onTaskDetailsSubmit}>
+        <DialogContent
+          className="bg-app-bg p-5 sm:max-w-lg"
+          showCloseButton={!updateTask.isPending}
+          onEscapeKeyDown={(event) => updateTask.isPending && event.preventDefault()}
+          onPointerDownOutside={(event) => updateTask.isPending && event.preventDefault()}
+        >
+          <DialogHeader className="mb-1 gap-2">
+            <DialogDescription className="text-xs font-medium uppercase tracking-[0.18em]">
+              Visualizar e editar
+            </DialogDescription>
+            <DialogTitle className="text-xl font-semibold">Detalhes da tarefa</DialogTitle>
+          </DialogHeader>
+          <form onSubmit={onTaskDetailsSubmit}>
           <div className="flex flex-col gap-4">
             <label className="flex flex-col gap-2">
               <span className="text-sm font-medium text-foreground/80">Título</span>
@@ -937,8 +1000,9 @@ export function ProjectBoard({ projectId }: Props) {
               {updateTask.isPending ? 'Salvando...' : 'Salvar alterações'}
             </Button>
           </div>
-        </form>
-      </Modal>
+          </form>
+        </DialogContent>
+      </Dialog>
     </main>
   );
 }

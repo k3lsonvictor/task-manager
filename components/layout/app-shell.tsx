@@ -6,7 +6,13 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { IconAdd, IconTimeline } from '@/components/icons';
-import { Modal } from '@/components/ui/modal';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
 import { ThemeToggle } from '@/components/theme-toggle';
 import type { Project } from '@/lib/api/api';
 import { useCreateProject, useProjects } from '@/lib/hooks/use-projects';
@@ -144,15 +150,29 @@ export function AppShell({ children }: Props) {
 
       <div className="min-w-0 flex-1 overflow-hidden">{children}</div>
 
-      <Modal
+      <Dialog
         open={creating}
-        title="Novo projeto"
-        description="Criar projeto"
-        onClose={closeCreateModal}
-        closeOnBackdrop={!createProject.isPending}
-        closeOnEscape={!createProject.isPending}
+        onOpenChange={(open) => {
+          if (!open && !createProject.isPending) closeCreateModal();
+        }}
       >
-        <form onSubmit={onCreateSubmit}>
+        <DialogContent
+          className="bg-app-bg p-5 sm:max-w-md"
+          showCloseButton={!createProject.isPending}
+          onEscapeKeyDown={(event) => {
+            if (createProject.isPending) event.preventDefault();
+          }}
+          onPointerDownOutside={(event) => {
+            if (createProject.isPending) event.preventDefault();
+          }}
+        >
+          <DialogHeader className="mb-1 gap-2">
+            <DialogDescription className="text-xs font-medium uppercase tracking-[0.18em]">
+              Criar projeto
+            </DialogDescription>
+            <DialogTitle className="text-xl font-semibold">Novo projeto</DialogTitle>
+          </DialogHeader>
+          <form onSubmit={onCreateSubmit}>
           <div className="flex flex-col gap-4">
             <label className="flex flex-col gap-2">
               <span className="text-sm font-medium text-foreground/80">Nome</span>
@@ -202,8 +222,9 @@ export function AppShell({ children }: Props) {
               {createProject.isPending ? 'Criando...' : 'Criar projeto'}
             </Button>
           </div>
-        </form>
-      </Modal>
+          </form>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
