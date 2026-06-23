@@ -16,6 +16,7 @@ import {
 import { ThemeToggle } from '@/components/theme-toggle';
 import type { Project } from '@/lib/api/api';
 import { useCreateProject, useProjects } from '@/lib/hooks/use-projects';
+import Image from 'next/image';
 
 type Props = {
   children: React.ReactNode;
@@ -78,9 +79,12 @@ export function AppShell({ children }: Props) {
       <aside className="flex h-dvh w-[270px] shrink-0 flex-col border-r border-foreground/10 bg-app-bg px-5 py-6 text-foreground">
         <div className="flex w-full flex-col gap-8 border-b border-foreground/10 pb-5">
           <Link href="/tasks" className="w-fit">
-            <span className="block text-lg font-semibold uppercase tracking-[0.18em] text-foreground">
-              Task Manager
-            </span>
+            <div className="flex items-end gap-2">
+              <Image src="/tM.svg" alt="Task Manager" width={30} height={30} />
+              <span className="block text-lg font-semibold uppercase tracking-[0.18em] text-foreground">
+                Task Manager
+              </span>
+            </div>
           </Link>
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2 text-foreground/80">
@@ -115,7 +119,7 @@ export function AppShell({ children }: Props) {
                       <Link
                         href={href}
                         key={project.id}
-                        className={`group flex w-full items-center rounded-lg px-3 py-2.5 text-sm transition-colors ${active
+                        className={`group flex w-full items-center rounded-lg px-3 py-2.5 text-sm transition-colors font-medium ${active
                           ? 'bg-foreground/10 text-foreground ring-1 ring-foreground/10'
                           : 'text-foreground/60 hover:bg-foreground/[0.06] hover:text-foreground'
                           }`}
@@ -173,55 +177,55 @@ export function AppShell({ children }: Props) {
             <DialogTitle className="text-xl font-semibold">Novo projeto</DialogTitle>
           </DialogHeader>
           <form onSubmit={onCreateSubmit}>
-          <div className="flex flex-col gap-4">
-            <label className="flex flex-col gap-2">
-              <span className="text-sm font-medium text-foreground/80">Nome</span>
-              <Input
-                value={name}
-                onChange={(event) => setName(event.target.value)}
-                className="h-11 rounded-lg border border-foreground/10 bg-foreground/5 px-3 text-sm text-foreground placeholder:text-foreground/35 focus:border-accent"
-                placeholder="Nome do projeto"
-                required
-              />
-            </label>
+            <div className="flex flex-col gap-4">
+              <label className="flex flex-col gap-2">
+                <span className="text-sm font-medium text-foreground/80">Nome</span>
+                <Input
+                  value={name}
+                  onChange={(event) => setName(event.target.value)}
+                  className="h-11 rounded-lg border border-foreground/10 bg-foreground/5 px-3 text-sm text-foreground placeholder:text-foreground/35 focus:border-accent"
+                  placeholder="Nome do projeto"
+                  required
+                />
+              </label>
 
-            <label className="flex flex-col gap-2">
-              <span className="text-sm font-medium text-foreground/80">Descrição</span>
-              <textarea
-                value={description}
-                onChange={(event) => setDescription(event.target.value)}
-                className="min-h-28 resize-none rounded-lg border border-foreground/10 bg-foreground/5 px-3 py-3 text-sm leading-6 text-foreground outline-none transition-colors placeholder:text-foreground/35 focus:border-accent"
-                placeholder="Descrição do projeto"
-              />
-            </label>
+              <label className="flex flex-col gap-2">
+                <span className="text-sm font-medium text-foreground/80">Descrição</span>
+                <textarea
+                  value={description}
+                  onChange={(event) => setDescription(event.target.value)}
+                  className="min-h-28 resize-none rounded-lg border border-foreground/10 bg-foreground/5 px-3 py-3 text-sm leading-6 text-foreground outline-none transition-colors placeholder:text-foreground/35 focus:border-accent"
+                  placeholder="Descrição do projeto"
+                />
+              </label>
 
-            {createProject.isError ? (
-              <p className="rounded-lg border border-destructive/20 bg-destructive/10 px-3 py-2 text-sm text-destructive">
-                {createProject.error.message}
-              </p>
-            ) : null}
-          </div>
+              {createProject.isError ? (
+                <p className="rounded-lg border border-destructive/20 bg-destructive/10 px-3 py-2 text-sm text-destructive">
+                  {createProject.error.message}
+                </p>
+              ) : null}
+            </div>
 
-          <div className="mt-6 flex justify-end gap-3">
-            <Button
-              type="button"
-              variant="ghost"
-              fullWidth={false}
-              className="rounded-lg px-4 text-sm"
-              onClick={closeCreateModal}
-              disabled={createProject.isPending}
-            >
-              Cancelar
-            </Button>
-            <Button
-              type="submit"
-              fullWidth={false}
-              className="!w-auto rounded-lg px-4 text-sm"
-              disabled={createProject.isPending || !name.trim()}
-            >
-              {createProject.isPending ? 'Criando...' : 'Criar projeto'}
-            </Button>
-          </div>
+            <div className="mt-6 flex justify-end gap-3">
+              <Button
+                type="button"
+                variant="ghost"
+                fullWidth={false}
+                className="rounded-lg px-4 text-sm"
+                onClick={closeCreateModal}
+                disabled={createProject.isPending}
+              >
+                Cancelar
+              </Button>
+              <Button
+                type="submit"
+                fullWidth={false}
+                className="!w-auto rounded-lg px-4 text-sm"
+                disabled={createProject.isPending || !name.trim()}
+              >
+                {createProject.isPending ? 'Criando...' : 'Criar projeto'}
+              </Button>
+            </div>
           </form>
         </DialogContent>
       </Dialog>
